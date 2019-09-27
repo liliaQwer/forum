@@ -1,0 +1,33 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+      ddl-auto: update
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/forum
+    username: postgres
+    password: 1234567
+
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username: stlab.kar@gmail.com
+    password: qazxsW123
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
+
+jwt:
+  secret_key: forum
