@@ -1,4 +1,4 @@
-package com.itechart.forum.password.restore.dto;
+package com.itechart.forum.user.restore.dto;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,10 @@
 package com.itechart.forum.user.service;
 
+import com.itechart.forum.user.dto.UserAddDto;
+import com.itechart.forum.user.dto.UserInfoDto;
 import com.itechart.forum.user.entity.User;
 import com.itechart.forum.user.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,42 +16,30 @@ public class UserServiceImpl implements UserService{
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     @Override
-    public int save(User user) {
-        User newUser = userRepository.save(user);
-        return newUser.getId();
+    public int save(UserAddDto userAddDto) {
+        User user = userRepository.save(modelMapper.map(userAddDto, User.class));
+        return user.getId();
     }
 
     @Override
-    public void update(User user) {
-
+    public UserInfoDto get(Integer id) {
+        return modelMapper.map(userRepository.getOne(1), UserInfoDto.class);
     }
 
     @Override
-    public int delete(int id) {
-        return 0;
-    }
-
-    @Override
-    public Optional<User> get(int id) {
-        return userRepository.findById(1);
-    }
-
-    @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public User findByLogin(String login) {
+    public UserInfoDto findByLogin(String login) {
         User user = userRepository.findByLogin(login);
-        return user;
+        return modelMapper.map(user, UserInfoDto.class);
     }
 
     @Override
-    public User findByEmail(String email) {
+    public UserInfoDto findByEmail(String email) {
         User user = userRepository.findByEmailIgnoreCase(email);
-        return user;
+        return  modelMapper.map(user, UserInfoDto.class);
     }
 
     @Override

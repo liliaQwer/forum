@@ -1,5 +1,6 @@
 package com.itechart.forum.security.service;
 
+import com.itechart.forum.user.dto.UserInfoDto;
 import com.itechart.forum.user.entity.User;
 import com.itechart.forum.user.exception.UserNotFoundException;
 import com.itechart.forum.user.service.UserService;
@@ -26,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByLogin(username);
+        UserInfoDto user = userService.findByLogin(username);
         if (user == null) {
             throw new UserNotFoundException("User with login '%s' doesn't exist", username);
         }
@@ -35,8 +36,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Getter
     @Setter
-    public class UserDetailsImpl extends User implements UserDetails {
-        public UserDetailsImpl(User user) {
+    public class UserDetailsImpl extends UserInfoDto implements UserDetails {
+        public UserDetailsImpl(UserInfoDto user) {
             super(user);
         }
 

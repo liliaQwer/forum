@@ -1,6 +1,7 @@
 package com.itechart.forum.user.controller;
 
 import com.itechart.forum.common.exception.ResourceNotFoundException;
+import com.itechart.forum.user.dto.UserInfoDto;
 import com.itechart.forum.user.entity.User;
 import com.itechart.forum.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,13 @@ public class UserController {
     private UserService userService;
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<User> getUser(@PathVariable(value = "id") Integer userId) throws ResourceNotFoundException{
+    public ResponseEntity<UserInfoDto> getUser(@PathVariable(value = "id") Integer userId) throws ResourceNotFoundException{
         System.out.println(new BCryptPasswordEncoder().encode("password"));
 
-        User user = userService.get(userId).orElseThrow(() -> new ResourceNotFoundException("User not found for this id : " + userId));
+        UserInfoDto user = userService.get(userId);
+        if (user == null){
+           throw new ResourceNotFoundException("User not found for this id : " + userId);
+        }
         return ResponseEntity.ok().body(user);
     }
 

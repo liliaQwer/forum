@@ -1,4 +1,4 @@
-package com.itechart.forum.common.validation;
+package com.itechart.forum.common.config;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;

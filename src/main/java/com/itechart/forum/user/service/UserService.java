@@ -1,17 +1,12 @@
 package com.itechart.forum.user.service;
 
-import com.itechart.forum.user.entity.User;
-
-import java.util.List;
-import java.util.Optional;
+import com.itechart.forum.user.dto.UserAddDto;
+import com.itechart.forum.user.dto.UserInfoDto;
 
 public interface UserService {
-    int save(User user);
-    void update(User user);
-    int delete(int id);
-    Optional<User> get(int id);
-    List<User> getAll();
-    User findByLogin(String login);
-    User findByEmail(String email);
+    int save(UserAddDto userAddDto);
+    UserInfoDto get(Integer id);
+    UserInfoDto findByLogin(String login);
+    UserInfoDto findByEmail(String email);
     void updatePassword(String password, Integer userId);
 }

@@ -1,8 +1,7 @@
-package com.itechart.forum.password.restore.dto;
+package com.itechart.forum.user.restore.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotEmpty;
