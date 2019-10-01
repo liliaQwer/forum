@@ -2,11 +2,13 @@ package com.itechart.forum.user.dto;
 
 import com.itechart.forum.user.type.RoleType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class UserInfoDto {
+@NoArgsConstructor
+public class UserFullInfoDto {
 
-    public UserInfoDto(UserInfoDto user){
+    public UserFullInfoDto(UserFullInfoDto user){
         this.id = user.id;
         this.login = user.login;
         this.password = user.password;

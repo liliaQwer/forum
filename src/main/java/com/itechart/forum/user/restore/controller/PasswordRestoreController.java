@@ -1,9 +1,10 @@
 package com.itechart.forum.user.restore.controller;
 
 import com.itechart.forum.common.exception.ResourceNotFoundException;
-import com.itechart.forum.user.dto.UserInfoDto;
+import com.itechart.forum.user.dto.UserFullInfoDto;
 import com.itechart.forum.user.restore.dto.EmailToRestoreDto;
 import com.itechart.forum.user.restore.dto.PasswordResetDto;
+import com.itechart.forum.user.restore.exception.PasswordRestoreException;
 import com.itechart.forum.user.restore.service.EmailService;
 import com.itechart.forum.user.restore.service.PasswordResetTokenService;
 import com.itechart.forum.user.restore.entity.PasswordRestoreToken;
@@ -34,7 +35,7 @@ public class PasswordRestoreController {
 
     @PostMapping
     public ResponseEntity<String> sendMailForRestore(@Valid @RequestBody EmailToRestoreDto emailToRestoreDto) throws ResourceNotFoundException {
-        UserInfoDto user = userService.findByEmail(emailToRestoreDto.getEmail());
+        UserFullInfoDto user = userService.findByEmail(emailToRestoreDto.getEmail());
         if (user == null) {
             throw new ResourceNotFoundException("User not found for this email : " + emailToRestoreDto.getEmail());
         }
@@ -47,26 +48,31 @@ public class PasswordRestoreController {
     }
 
     @GetMapping
-    public ResponseEntity<String> displayResetPasswordPage(@RequestParam(required = false) String token) throws Exception {
+    public ResponseEntity<String> displayResetPasswordPage(@RequestParam String token) throws Exception {
 
         PasswordRestoreToken resetToken = passwordResetTokenService.findByToken(token);
-        if (resetToken == null) {
-            throw new Exception("Could not find password reset token.");
-        } else if (resetToken.isExpired()) {
-            throw new Exception("Token has expired, please request a new password reset.");
-        }
+        verifyToken(resetToken);
         return ResponseEntity.ok().body(resetToken.getToken());
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity<String> handlePasswordReset(@RequestBody @Valid PasswordResetDto form) {
+    public ResponseEntity<String> handlePasswordReset(@RequestBody @Valid PasswordResetDto form) throws PasswordRestoreException{
 
         PasswordRestoreToken token = passwordResetTokenService.findByToken(form.getToken());
+        verifyToken(token);
         String updatedPassword = passwordEncoder.encode(form.getPassword());
         userService.updatePassword(updatedPassword, token.getUserId());
         passwordResetTokenService.delete(token);
 
         return ResponseEntity.ok().build();
+    }
+
+    private void verifyToken(PasswordRestoreToken token) throws PasswordRestoreException{
+        if (token == null) {
+            throw new PasswordRestoreException("Could not find password reset token.");
+        } else if (token.isExpired()) {
+            throw new PasswordRestoreException("Token has expired, please request a new link.");
+        }
     }
 }

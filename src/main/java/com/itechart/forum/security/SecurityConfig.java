@@ -1,7 +1,7 @@
 package com.itechart.forum.security;
 
 import com.itechart.forum.security.jwt.JwtAuthenticationEntryPoint;
-import com.itechart.forum.security.jwt.filter.JwtRequestFilter;
+import com.itechart.forum.security.filter.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,10 +33,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity
                 .authorizeRequests()
-                .antMatchers("/signup", "/restore*", "/reset_password").permitAll()
+                .antMatchers("/user/signup", "/user/signin","/restore*", "/reset_password").permitAll()
                 //.antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user").permitAll()
-                //.anyRequest().authenticated()
+                .anyRequest().authenticated()
               .and()
                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
 

@@ -31,3 +31,8 @@ spring:
 
 jwt:
   secret_key: forum
+
+password:
+  restore:
+    expire:
+      days: 12

@@ -1,14 +1,21 @@
 package com.itechart.forum.user.controller;
 
+import com.itechart.forum.common.exception.AlreadyExistException;
 import com.itechart.forum.common.exception.ResourceNotFoundException;
-import com.itechart.forum.user.dto.UserInfoDto;
+import com.itechart.forum.security.jwt.JwtTokenUtil;
+import com.itechart.forum.user.dto.LoginDto;
+import com.itechart.forum.user.dto.UserAddDto;
+import com.itechart.forum.user.dto.UserFullInfoDto;
 import com.itechart.forum.user.entity.User;
 import com.itechart.forum.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @RestController
@@ -16,43 +23,31 @@ import javax.validation.Valid;
 public class UserController {
 
     @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
     private UserService userService;
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<UserInfoDto> getUser(@PathVariable(value = "id") Integer userId) throws ResourceNotFoundException{
-        System.out.println(new BCryptPasswordEncoder().encode("password"));
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
-        UserInfoDto user = userService.get(userId);
-        if (user == null){
-           throw new ResourceNotFoundException("User not found for this id : " + userId);
-        }
-        return ResponseEntity.ok().body(user);
+    @PostMapping(path = "/signup")
+    public ResponseEntity<?> signUp(@Valid @RequestBody UserAddDto userAddDto) throws AlreadyExistException {
+        userAddDto.setPassword(passwordEncoder.encode(userAddDto.getPassword()));
+        userService.saveAndFetch(userAddDto);
+        String token = jwtTokenUtil.generateToken(userAddDto.getLogin(), userAddDto.getRole().name());
+        return ResponseEntity.ok(token);
     }
 
-    @GetMapping
-    public ResponseEntity<User> getUser(@Valid User user){
-
-        return ResponseEntity.ok().body(user);
+    @PostMapping(path = "/signin")
+    public ResponseEntity<?> signIn(@Valid @RequestBody LoginDto loginDto) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getLogin(),
+                loginDto.getPassword()));
+        UserFullInfoDto user = userService.findByLogin(loginDto.getLogin());
+        String token = jwtTokenUtil.generateToken(loginDto.getLogin(), user.getRole().name());
+        return ResponseEntity.ok(token);
     }
-
-    @PostMapping
-    public ResponseEntity<User> signUp(@Valid @RequestBody User user)  {//, BindingResult result
-
-       // System.out.println(result);
-        //ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        //Validator validator = factory.getValidator();
-//        User user = new User();
-//        user.setEmail("Liliaqwer@gmail.com");
-//        user.setLogin("lilia1111111111111111111111111111111111111111111111111111111111");
-//        user.setPassword(new BCryptPasswordEncoder().encode("password"));
-//        user.setRole(RoleType.USER);
-//        Set<ConstraintViolation<User>> violations = validator.validate(user);
-//        for (ConstraintViolation<User> violation : violations) {
-//            System.out.println(violation.getMessage());
-//        }
-        //userService.save(user);
-       return ResponseEntity.ok().body(user);
-    }
-
-
 }

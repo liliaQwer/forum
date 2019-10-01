@@ -1,5 +1,8 @@
 package com.itechart.forum.common.exception;
 
+import com.itechart.forum.user.restore.entity.PasswordRestoreToken;
+import com.itechart.forum.user.restore.exception.PasswordRestoreException;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -23,9 +26,30 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> resourceNotFoundexception(ResourceNotFoundException ex, WebRequest request) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), Arrays.asList(request.getDescription(false)));
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), Arrays.asList(ex.getMessage()));
         log.error(errorDetails.toString());
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AlreadyExistException.class)
+    public ResponseEntity<?> alreadyExistException(AlreadyExistException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), Arrays.asList(ex.getMessage()));
+        log.error(errorDetails.toString());
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PasswordRestoreException.class)
+    public ResponseEntity<?> passwordRestoreException(PasswordRestoreException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), Arrays.asList(ex.getMessage()));
+        log.error(errorDetails.toString());
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<?> expiredJwtException(ExpiredJwtException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), Arrays.asList(ex.getMessage()));
+        log.error(errorDetails.toString());
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
 //    @ExceptionHandler(Exception.class)

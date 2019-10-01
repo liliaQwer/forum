@@ -10,10 +10,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer>, QuerydslPredicateExecutor<User> {
-    User findByLogin(String login);
+    User findByLoginIgnoreCase(String login);
     User findByEmailIgnoreCase(String email);
 
     @Modifying
     @Query("update User set password = :password where id = :id")
     void updatePassword(@Param("password") String password, @Param("id") Integer id);
+
+    boolean existsByLoginIgnoreCase(String login);
+
+    boolean existsByEmailIgnoreCase(String email);
 }

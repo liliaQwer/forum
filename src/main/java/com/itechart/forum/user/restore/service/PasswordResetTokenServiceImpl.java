@@ -3,6 +3,7 @@ package com.itechart.forum.user.restore.service;
 import com.itechart.forum.user.restore.repository.PasswordRestoreTokenRepository;
 import com.itechart.forum.user.restore.entity.PasswordRestoreToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -10,6 +11,9 @@ import java.util.UUID;
 
 @Service
 public class PasswordResetTokenServiceImpl implements PasswordResetTokenService {
+    @Value("${password.restore.expire.days}")
+    private Integer expireDays;
+
     @Autowired
     PasswordRestoreTokenRepository passwordRestoreTokenRepository;
 
@@ -32,7 +36,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         PasswordRestoreToken passwordRestoreToken = new PasswordRestoreToken();
         passwordRestoreToken.setToken(UUID.randomUUID().toString());
         passwordRestoreToken.setUserId(userId);
-        passwordRestoreToken.setExpireDate(LocalDate.now().plusDays(12));
+        passwordRestoreToken.setExpireDate(LocalDate.now().plusDays(expireDays));
         return passwordRestoreToken;
     }
 

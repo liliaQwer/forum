@@ -20,6 +20,6 @@ public class PostFilterDto {
 
     private LocalDate createdDate;
 
-    private User createdBy;
+    private Integer createdBy;
 
 }

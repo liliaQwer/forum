@@ -44,9 +44,10 @@ public class Post {
     private LocalDate createdDate;
 
     @CreatedBy
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "created_by")
-    private User createdBy;
+//    @ManyToOne
+//    @JoinColumn(name = "created_by")
+//    private User createdBy;
+    private Integer createdBy;
 
     @Column(nullable = false, updatable = false)
     @LastModifiedDate
