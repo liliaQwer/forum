@@ -5,6 +5,7 @@ import com.itechart.forum.user.entity.User;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class PostFullInfoDto {
@@ -16,11 +17,11 @@ public class PostFullInfoDto {
 
     private String description;
 
-    private String body;
+    private String content;
 
     private LocalDate createdDate;
 
-    private User createdBy;
-    
-    private LocalDate modifiedDate;
+    private String createdBy;
+
+    private List<CommentDto> comments;
 }

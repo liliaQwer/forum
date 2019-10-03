@@ -27,14 +27,12 @@ public class Comment {
 
     private Integer dislikesCount;
 
-    @ManyToOne(targetEntity = Post.class)
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
     @CreatedBy
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "created_by")
-    private User createdBy;
+    private String createdBy;
 
     @Column(nullable = false, updatable = false)
     @CreatedDate

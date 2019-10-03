@@ -12,14 +12,10 @@ import java.time.LocalDate;
 @Data
 public class PostFilterDto {
 
-    @Size(max = 50, message = "{title.maxsize}")
-    private String title;
+//    @Size(max = 50, message = "{title.maxsize}")
+//    private String title;
 
-    @Enumerated(EnumType.ORDINAL)
     private CategoryType category;
-
-    private LocalDate createdDate;
-
-    private Integer createdBy;
-
+//
+//    private LocalDate createdDate;
 }

@@ -21,5 +21,5 @@ public class PostUpdateDto {
     @Size(max = 100, message = "{description.maxsize}")
     private String description;
 
-    private String body;
+    private String content;
 }

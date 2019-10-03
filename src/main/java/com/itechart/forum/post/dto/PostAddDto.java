@@ -15,7 +15,6 @@ public class PostAddDto {
     @NotNull(message = "{title.notnull}")
     private String title;
 
-    @Enumerated(EnumType.ORDINAL)
     @NotNull(message = "category.notnull")
     private CategoryType category;
 
@@ -24,5 +23,5 @@ public class PostAddDto {
     private String description;
 
     @NotNull(message = "body.notnull")
-    private String body;
+    private String content;
 }

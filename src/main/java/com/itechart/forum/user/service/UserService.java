@@ -3,8 +3,7 @@ package com.itechart.forum.user.service;
 import com.itechart.forum.common.exception.AlreadyExistException;
 import com.itechart.forum.user.dto.UserAddDto;
 import com.itechart.forum.user.dto.UserFullInfoDto;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface UserService {
     @Transactional

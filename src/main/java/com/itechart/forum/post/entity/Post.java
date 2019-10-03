@@ -2,24 +2,23 @@ package com.itechart.forum.post.entity;
 
 import com.itechart.forum.comment.Comment;
 import com.itechart.forum.post.type.CategoryType;
-import com.itechart.forum.user.entity.User;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Table(name = "post")
 @EntityListeners(AuditingEntityListener.class)
-@SecondaryTable(name = "post_content", pkJoinColumns = @PrimaryKeyJoinColumn(name = "fk_post_id", referencedColumnName = "id"))
-@Data
+@Getter
+@Setter
 public class Post {
     @Id
     @GeneratedValue(generator = "post_id_generator")
@@ -33,8 +32,11 @@ public class Post {
 
     private String description;
 
-    @Basic(fetch = FetchType.LAZY)
-    private String body;
+
+    //    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @PrimaryKeyJoinColumn
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "post")
+    private PostContent content;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
     private List<Comment> commentList;
@@ -44,10 +46,7 @@ public class Post {
     private LocalDate createdDate;
 
     @CreatedBy
-//    @ManyToOne
-//    @JoinColumn(name = "created_by")
-//    private User createdBy;
-    private Integer createdBy;
+    private String createdBy;
 
     @Column(nullable = false, updatable = false)
     @LastModifiedDate

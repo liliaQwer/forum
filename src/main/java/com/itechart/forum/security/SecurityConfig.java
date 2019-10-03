@@ -5,6 +5,7 @@ import com.itechart.forum.security.filter.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,7 +35,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .authorizeRequests()
                 .antMatchers("/user/signup", "/user/signin","/restore*", "/reset_password").permitAll()
-                //.antMatchers("/admin/**").hasRole("ADMIN")
+//                .antMatchers( HttpMethod.POST, "/posts").hasAnyRole("ADMIN", "USER")
+//                .antMatchers( HttpMethod.PUT, "/posts/*").hasAnyRole("ADMIN", "USER")
+//                .antMatchers( HttpMethod.DELETE, "/posts").hasAnyRole("ADMIN", "USER")
+                .antMatchers( HttpMethod.GET, "/posts/*", "/posts").permitAll()
+                //.antMatchers( HttpMethod.POST, "/posts").hasRole("ADMIN")
                 .antMatchers("/user").permitAll()
                 .anyRequest().authenticated()
               .and()

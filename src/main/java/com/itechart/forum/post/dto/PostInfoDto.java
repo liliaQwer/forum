@@ -18,6 +18,6 @@ public class PostInfoDto {
 
     private LocalDate createdDate;
 
-    private User createdBy;
+    private String createdBy;
 
 }

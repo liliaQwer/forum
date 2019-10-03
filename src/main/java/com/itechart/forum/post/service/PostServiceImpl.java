@@ -1,66 +1,138 @@
 package com.itechart.forum.post.service;
 
+import com.itechart.forum.comment.Comment;
+import com.itechart.forum.common.exception.ResourceNotFoundException;
 import com.itechart.forum.post.dto.*;
 import com.itechart.forum.post.entity.Post;
+import com.itechart.forum.post.entity.PostContent;
 import com.itechart.forum.post.entity.QPost;
 import com.itechart.forum.post.repository.PostRepository;
+import com.itechart.forum.post.type.CategoryType;
+import com.itechart.forum.security.userdetails.UserDetailsImpl;
+import com.itechart.forum.user.type.RoleType;
 import com.querydsl.core.BooleanBuilder;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import javax.naming.NoPermissionException;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService{
+    @Value("${pagination.page_size.min}")
+    private int minPageSize;
 
-    @Autowired
+    @Value("${pagination.page_size.max}")
+    private int maxPageSize;
+
+    @Value("${pagination.page_size.default}")
+    private int defaultPageSize;
+
     private PostRepository postRepository;
 
-    @Autowired
     private ModelMapper modelMapper;
+
+    private Type commentListType = new TypeToken<List<CommentDto>>() {}.getType();
+
+    @Autowired
+    public PostServiceImpl(PostRepository postRepository, ModelMapper modelMapper){
+        this.postRepository = postRepository;
+        this.modelMapper = modelMapper;
+
+        this.modelMapper.addMappings(new PropertyMap<Post, PostFullInfoDto>() {
+            @Override
+            protected void configure() {
+                map(source.getContent().getBody(), destination.getContent());
+            }
+        });
+        this.modelMapper.addMappings(new PropertyMap<PostUpdateDto, Post>() {
+            @Override
+            protected void configure() {
+                map(source.getContent(), destination.getContent().getBody());
+            }
+        });
+    }
 
     @Override
     public int save(PostAddDto postAddDto) {
-        Post post = modelMapper.map(postAddDto, Post.class);
+        Post post = new Post();
+        post.setCategory(postAddDto.getCategory());
+        PostContent content = new PostContent();
+        content.setBody(postAddDto.getContent());
+        content.setPost(post);
+        post.setContent(content);
+        post.setDescription(postAddDto.getDescription());
+        post.setTitle(postAddDto.getTitle());
+
+        //Post post = modelMapper.map(postAddDto, Post.class);
         postRepository.save(post);
         return post.getId();
     }
 
     @Override
-    public void update(PostUpdateDto postUpdateDto) {
-        Post post = postRepository.getOne(postUpdateDto.getId());
+    public void update(int id, PostUpdateDto postUpdateDto) {
+        Post post = postRepository.getOne(id);
+        postUpdateDto.setId(id);
         modelMapper.map(postUpdateDto, post);
     }
 
     @Override
-    public void delete(Integer id) {
-         postRepository.deleteById(id);
+    public void delete(int... ids) throws NoPermissionException {
+        for (int id: ids){
+            postRepository.deleteById(id);
+        }
     }
 
     @Override
     public Page<PostInfoDto> get(PostFilterDto filter, Pageable pageable) {
+        if (pageable.getPageSize() < minPageSize || pageable.getPageSize() > maxPageSize) {
+            pageable = PageRequest.of(pageable.getPageNumber(), defaultPageSize, Sort.Direction.DESC, "createdDate");
+        }
         QPost post = QPost.post;
         BooleanBuilder predicate = new BooleanBuilder();
-        if (filter.getCategory() != null){
+        if (filter.getCategory() != null && filter.getCategory() != CategoryType.All){
             predicate.and(post.category.eq(filter.getCategory()));
         }
-        if (filter.getTitle() != null){
-            predicate.and(post.title.contains(filter.getTitle()));
-        }
-        if (filter.getCreatedBy() != null){
-            predicate.and(post.createdBy.eq(filter.getCreatedBy()));
-        }
-        if (filter.getCreatedDate() != null){
-            predicate.and(post.createdDate.eq(filter.getCreatedDate()));
-        }
+//        if (filter.getTitle() != null){
+//            predicate.and(post.title.contains(filter.getTitle()));
+//        }
+//        if (filter.getCreatedDate() != null){
+//            predicate.and(post.createdDate.eq(filter.getCreatedDate()));
+//        }
         Page<Post> postPage = postRepository.findAll(predicate, pageable);
-        return postPage.map((postElement) -> modelMapper.map(post, PostInfoDto.class));
+        return postPage.map((postElement) -> modelMapper.map(postElement, PostInfoDto.class));
     }
 
     @Override
-    public PostFullInfoDto getById(Integer id) {
+    public PostInfoDto getById(Integer id) throws ResourceNotFoundException {
         Post post = postRepository.getOne(id);
-        return modelMapper.map(post, PostFullInfoDto.class);
+        if (post == null){
+            throw new ResourceNotFoundException("Post not found with this id: " + id);
+        }
+        return modelMapper.map(post, PostInfoDto.class);
+    }
+
+    @Override
+    public PostFullInfoDto getFullInfoById(Integer id) throws ResourceNotFoundException {
+        Post post = postRepository.findById(id).get();
+        if (post == null){
+            throw new ResourceNotFoundException("Post not found with this id: " + id);
+        }
+        PostFullInfoDto fullPost = modelMapper.map(post, PostFullInfoDto.class);
+        List<CommentDto> comments = modelMapper.map(post.getCommentList(), commentListType);
+        fullPost.setComments(comments);
+        return fullPost;
+
     }
 }

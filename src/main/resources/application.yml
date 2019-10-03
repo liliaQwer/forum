@@ -6,8 +6,8 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-    hibernate:
-      ddl-auto: update
+    #hibernate:
+      #ddl-auto: update
 
   datasource:
     url: jdbc:postgresql://localhost:5432/forum
@@ -36,3 +36,9 @@ password:
   restore:
     expire:
       days: 12
+
+pagination:
+  page_size:
+    min: 5
+    max: 20
+    default: 10
