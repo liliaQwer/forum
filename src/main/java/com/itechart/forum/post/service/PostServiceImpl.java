@@ -1,6 +1,5 @@
 package com.itechart.forum.post.service;
 
-import com.itechart.forum.comment.Comment;
 import com.itechart.forum.common.exception.ResourceNotFoundException;
 import com.itechart.forum.post.dto.*;
 import com.itechart.forum.post.entity.Post;
@@ -8,8 +7,6 @@ import com.itechart.forum.post.entity.PostContent;
 import com.itechart.forum.post.entity.QPost;
 import com.itechart.forum.post.repository.PostRepository;
 import com.itechart.forum.post.type.CategoryType;
-import com.itechart.forum.security.userdetails.UserDetailsImpl;
-import com.itechart.forum.user.type.RoleType;
 import com.querydsl.core.BooleanBuilder;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -24,9 +21,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.naming.NoPermissionException;
+import javax.persistence.EntityNotFoundException;
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService{
@@ -81,15 +78,16 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void update(int id, PostUpdateDto postUpdateDto) {
-        Post post = postRepository.getOne(id);
+    public void update(UserDetails userDetails, int id, PostUpdateDto postUpdateDto) throws NoPermissionException, ResourceNotFoundException {
+        Post post = getPostIfAllowed(userDetails, id);
         postUpdateDto.setId(id);
         modelMapper.map(postUpdateDto, post);
     }
 
     @Override
-    public void delete(int... ids) throws NoPermissionException {
+    public void delete(UserDetails userDetails, int... ids) throws NoPermissionException, ResourceNotFoundException {
         for (int id: ids){
+            getPostIfAllowed(userDetails, id);
             postRepository.deleteById(id);
         }
     }
@@ -116,8 +114,11 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public PostInfoDto getById(Integer id) throws ResourceNotFoundException {
-        Post post = postRepository.getOne(id);
-        if (post == null){
+        Post post;
+        try {
+            post = postRepository.getOne(id);
+            post.getId();
+        }catch (EntityNotFoundException e){
             throw new ResourceNotFoundException("Post not found with this id: " + id);
         }
         return modelMapper.map(post, PostInfoDto.class);
@@ -133,6 +134,21 @@ public class PostServiceImpl implements PostService{
         List<CommentDto> comments = modelMapper.map(post.getCommentList(), commentListType);
         fullPost.setComments(comments);
         return fullPost;
+    }
 
+
+    private Post getPostIfAllowed(UserDetails userDetails, int id) throws NoPermissionException, ResourceNotFoundException {
+        Post post;
+        try {
+            post = postRepository.getOne(id);
+            post.getId();
+        }catch (EntityNotFoundException e){
+            throw new ResourceNotFoundException("Post not found with this id: " + id);
+        }
+        if (!post.getCreatedBy().equals(userDetails.getUsername()) &&
+                !userDetails.getAuthorities().contains("ADMIN")){
+            throw new NoPermissionException("You have no permission for this operation with post with id: " + id);
+        }
+        return post;
     }
 }

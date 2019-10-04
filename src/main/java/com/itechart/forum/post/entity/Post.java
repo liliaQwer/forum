@@ -38,7 +38,7 @@ public class Post {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "post")
     private PostContent content;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", orphanRemoval = true)
     private List<Comment> commentList;
 
     @Column(nullable = false, updatable = false)

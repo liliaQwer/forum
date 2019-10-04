@@ -14,14 +14,17 @@ public interface PostService {
     int save(PostAddDto postAddDto);
 
     @Transactional
-    void update(int id, PostUpdateDto postUpdateDto);
+    void update(UserDetails userDetails, int id, PostUpdateDto postUpdateDto) throws NoPermissionException, ResourceNotFoundException;
 
     @Transactional
-    void delete(int... ids) throws NoPermissionException;
+    void delete(UserDetails userDetails, int... ids) throws NoPermissionException, ResourceNotFoundException;
 
+    @Transactional
     Page<PostInfoDto> get(PostFilterDto filter, Pageable pageable);
 
+    @Transactional
     PostInfoDto getById(Integer id) throws ResourceNotFoundException;
 
+    @Transactional
     PostFullInfoDto getFullInfoById(Integer id) throws ResourceNotFoundException;
 }

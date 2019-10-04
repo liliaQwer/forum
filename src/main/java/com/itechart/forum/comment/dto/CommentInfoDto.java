@@ -16,9 +16,7 @@ public class CommentInfoDto {
 
     private Integer dislikesCount;
 
-    private PostInfoDto post;
-
-    private User createdBy;
+    private String createdBy;
 
     private LocalDate createdDate;
 }

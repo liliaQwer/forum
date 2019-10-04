@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -12,16 +13,16 @@ import javax.validation.constraints.Size;
 public class PostAddDto {
 
     @Size(max = 50, message = "{title.maxsize}")
-    @NotNull(message = "{title.notnull}")
+    @NotEmpty(message = "{title.notempty}")
     private String title;
 
-    @NotNull(message = "category.notnull")
+    @NotNull(message = "category.notempty")
     private CategoryType category;
 
     @Size(max = 100, message = "{description.maxsize}")
-    @NotNull(message = "description.notnull")
+    @NotEmpty(message = "{description.notempty}")
     private String description;
 
-    @NotNull(message = "body.notnull")
+   @NotEmpty(message = "{body.notempty}")
     private String content;
 }
