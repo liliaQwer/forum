@@ -1,0 +1,353 @@
+{
+	"variables": [],
+	"info": {
+		"name": "forum",
+		"_postman_id": "ae73edb1-8473-5fb7-efcf-27f7e8b7c8f7",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/user/signin",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/user/signin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"signin"
+					],
+					"query": [
+						{
+							"key": "login",
+							"value": "lilia1111111111111111111111111111111111111111111111111111111111",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"login\":\"lil\", \"password\":\"password\"}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/user/signup",
+			"request": {
+				"url": "http://localhost:8080/user/signup",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"login\":\"PETE3r\", \"password\":\"password\", \"email\":\"pet34r_qwer@gmail.com\"}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/restore",
+			"request": {
+				"url": "http://localhost:8080/restore",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"liliaqwer@gmail.com\"}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/restore",
+			"request": {
+				"url": "http://localhost:8080/restore",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"token\":\"21b2b18-7da3-465e-9d3d-e6f03d4d6016\",\"password\":\"1234\",\"confirmPassword\":\"1234\"}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/posts",
+			"request": {
+				"url": "http://localhost:8080/posts",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInN1YiI6ImxpbCIsImlhdCI6MTU3MDE3MjMwNSwiZXhwIjoxNTcwMjAxMTA1fQ.9gjeBZCk8wXbjVIGuxrP7ejBX4Iyfuyy433hLTHQJCQCKJyIGwB58ex4ylKXIGQNRu8pCEIrlcEP5zKPgqhhrQ",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"title\":\"Ne3\",\"category\":\"SCIENCE\",\"description\":\"New des3\",\"content\":\"New body3\"}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/posts?category=SCIENCE",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/posts?category=SCIENCE",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"posts"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "size",
+							"value": "5",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "category",
+							"value": "SCIENCE",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInN1YiI6ImxpbCIsImlhdCI6MTU3MDA4MzkxMCwiZXhwIjoxNTcwMTEyNzEwfQ.l0OkHpE0IiNV16tXAVgqZRtHv1o4BgnTVqlU0BpKqa3XEfmTssV2XvUT-RP5oW0j5dWWcAasLgLbyTCa3Bgwtg",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/posts/51",
+			"request": {
+				"url": "http://localhost:8080/posts/51",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInN1YiI6ImxpbCIsImlhdCI6MTU3MDA4MzkxMCwiZXhwIjoxNTcwMTEyNzEwfQ.l0OkHpE0IiNV16tXAVgqZRtHv1o4BgnTVqlU0BpKqa3XEfmTssV2XvUT-RP5oW0j5dWWcAasLgLbyTCa3Bgwtg",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/posts",
+			"request": {
+				"url": "http://localhost:8080/posts",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInN1YiI6ImxpbCIsImlhdCI6MTU3MDE3MjMwNSwiZXhwIjoxNTcwMjAxMTA1fQ.9gjeBZCk8wXbjVIGuxrP7ejBX4Iyfuyy433hLTHQJCQCKJyIGwB58ex4ylKXIGQNRu8pCEIrlcEP5zKPgqhhrQ",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[47]"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/posts/50",
+			"request": {
+				"url": "http://localhost:8080/posts/50",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInN1YiI6ImxpbCIsImlhdCI6MTU3MDA4MzkxMCwiZXhwIjoxNTcwMTEyNzEwfQ.l0OkHpE0IiNV16tXAVgqZRtHv1o4BgnTVqlU0BpKqa3XEfmTssV2XvUT-RP5oW0j5dWWcAasLgLbyTCa3Bgwtg",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"title\":\"NeEdit\",\"category\":\"SCIENCE\",\"description\":\"New desEdit\",\"content\":\"New bodyEdit\"}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/posts/50/comments",
+			"request": {
+				"url": "http://localhost:8080/posts/50/comments",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInN1YiI6ImxpbCIsImlhdCI6MTU3MDE3MjMwNSwiZXhwIjoxNTcwMjAxMTA1fQ.9gjeBZCk8wXbjVIGuxrP7ejBX4Iyfuyy433hLTHQJCQCKJyIGwB58ex4ylKXIGQNRu8pCEIrlcEP5zKPgqhhrQ",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"postId\":\"50\", \"content\":\"contentik2\"}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/posts/50/comments/3/like",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/posts/50/comments/3/like",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"posts",
+						"50",
+						"comments",
+						"3",
+						"like"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "3",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "3"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/posts/50/comments",
+			"request": {
+				"url": "http://localhost:8080/posts/50/comments",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer  eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInN1YiI6ImxpbCIsImlhdCI6MTU3MDE3MjMwNSwiZXhwIjoxNTcwMjAxMTA1fQ.9gjeBZCk8wXbjVIGuxrP7ejBX4Iyfuyy433hLTHQJCQCKJyIGwB58ex4ylKXIGQNRu8pCEIrlcEP5zKPgqhhrQ",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "6"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/posts/50/comments",
+			"request": {
+				"url": "http://localhost:8080/posts/50/comments",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

@@ -9,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,7 +42,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers( HttpMethod.GET, "/posts/*", "/posts","/post_categories", "/posts/*/comments").permitAll()
                 .antMatchers( HttpMethod.POST, "/posts/*/comments/*/dislike", "/posts/*/comments/*/like").permitAll()
                 .antMatchers( HttpMethod.GET, "/comments/like", "/comments/dislike").permitAll()
-                //.antMatchers( HttpMethod.POST, "/posts").hasRole("ADMIN")
+
+                .antMatchers( HttpMethod.GET, "/").permitAll()
+                .antMatchers( HttpMethod.GET, "/*").permitAll()
+                .antMatchers( HttpMethod.GET, "/gs-guide-websocket/*","/gs-guide-websocket/*/*","/gs-guide-websocket/*/*/*").permitAll()
+                .antMatchers( HttpMethod.GET, "/api/hello").permitAll()
+
                 .antMatchers("/user").permitAll()
                 .anyRequest().authenticated()
               .and()
@@ -65,5 +71,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers("/*.css", "/js/**", "/*/*/*", "/*.js", "/*.*.css","/*.ico", "/*/*/*/*.*.*");
     }
 }
