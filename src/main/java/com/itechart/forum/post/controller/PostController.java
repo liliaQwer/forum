@@ -69,4 +69,6 @@ public class PostController {
 //    public void initBinder(final WebDataBinder webdataBinder) {
 //        webdataBinder.registerCustomEditor(CategoryType.class, new CategoryTypeConverter());
 //    }
+
+
 }

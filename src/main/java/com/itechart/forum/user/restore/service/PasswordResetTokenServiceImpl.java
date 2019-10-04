@@ -40,5 +40,9 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         return passwordRestoreToken;
     }
 
-
+    @Override
+    public void deleteExpired(){
+        //delete all records with expire_date more than month ago
+        passwordRestoreTokenRepository.deleteAllByExpireDateBefore(LocalDate.now().minusMonths(1));
+    }
 }
