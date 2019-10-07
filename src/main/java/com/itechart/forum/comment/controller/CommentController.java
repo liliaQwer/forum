@@ -6,6 +6,7 @@ import com.itechart.forum.comment.dto.CommentNotification;
 import com.itechart.forum.comment.service.CommentService;
 import com.itechart.forum.common.exception.ResourceNotFoundException;
 import com.itechart.forum.security.userdetails.UserDetailsImpl;
+import com.itechart.forum.websocket.service.SocketCommentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,8 +44,9 @@ public class CommentController {
     }
 
     @PostMapping(path = "/posts/{postId}/comments")
-    public ResponseEntity<Integer> addComment(@Valid @RequestBody CommentAddDto commentAddDto) {
+    public ResponseEntity<Integer> addComment(@PathVariable Integer postId, @Valid @RequestBody CommentAddDto commentAddDto) {
         int id = commentService.save(commentAddDto);
+        SocketCommentService.sendNotification("/posts/" + postId);
         return ResponseEntity.ok().body(id);
     }
 
