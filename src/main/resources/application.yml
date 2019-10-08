@@ -8,6 +8,7 @@ spring:
             non_contextual_creation: true
     #hibernate:
       #ddl-auto: update
+    open-in-view: false
 
   datasource:
     url: jdbc:postgresql://localhost:5432/forum

@@ -21,6 +21,4 @@ public class PostFullInfoDto {
     private LocalDate createdDate;
 
     private String createdBy;
-
-    private List<CommentDto> comments;
 }

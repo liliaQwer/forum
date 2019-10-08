@@ -2,6 +2,8 @@ package com.itechart.forum.comment;
 
 import com.itechart.forum.post.entity.Post;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,7 +14,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "post_comment")
 @EntityListeners(AuditingEntityListener.class)
-@Data
+@Getter
+@Setter
 public class Comment {
     @Id
     @GeneratedValue(generator = "comment_id_generator")

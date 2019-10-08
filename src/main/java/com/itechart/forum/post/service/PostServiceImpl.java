@@ -135,8 +135,6 @@ public class PostServiceImpl implements PostService {
             throw new ResourceNotFoundException("Post not found with this id: " + id);
         }
         PostFullInfoDto fullPost = modelMapper.map(post.get(), PostFullInfoDto.class);
-        List<CommentDto> comments = modelMapper.map(post.get().getCommentList(), commentListType);
-        fullPost.setComments(comments);
         return fullPost;
     }
 

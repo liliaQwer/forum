@@ -12,19 +12,13 @@ import javax.persistence.*;
 public class PostContent{
 
     @Id
-    @Column(name = "fk_post_id")
+    @Column(name = "post_id")
     private Integer id;
-
-    //    @Lob
-//    @Type(type = "org.hibernate.type.TextType")
 
     private String body;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_post_id")
-//    @OneToOne(mappedBy = "content")
-//    @MapsId
-//    @JoinColumn(name = "fk_post_id")
+    @JoinColumn(name = "post_id")
     private Post post;
 }
