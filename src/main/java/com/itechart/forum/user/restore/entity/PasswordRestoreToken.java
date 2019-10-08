@@ -1,6 +1,5 @@
 package com.itechart.forum.user.restore.entity;
 
-import com.itechart.forum.user.entity.User;
 import lombok.Data;
 
 import javax.persistence.*;

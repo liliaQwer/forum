@@ -2,7 +2,6 @@ package com.itechart.forum.comment.controller;
 
 import com.itechart.forum.comment.dto.CommentAddDto;
 import com.itechart.forum.comment.dto.CommentInfoDto;
-import com.itechart.forum.comment.dto.CommentNotification;
 import com.itechart.forum.comment.service.CommentService;
 import com.itechart.forum.common.exception.ResourceNotFoundException;
 import com.itechart.forum.security.userdetails.UserDetailsImpl;
@@ -14,9 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,8 +48,8 @@ public class CommentController {
     }
 
     @DeleteMapping(path = "/posts/{postId}/comments")
-    public ResponseEntity<?> deleteComment(Authentication authentication, @PathVariable Integer postId, @RequestBody int id) throws NoPermissionException, ResourceNotFoundException {
-        UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    public ResponseEntity<?> deleteComment(@PathVariable Integer postId, @RequestBody int id) throws NoPermissionException, ResourceNotFoundException {
+        UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         commentService.delete(userDetails, id);
         return ResponseEntity.ok().build();
     }
@@ -61,11 +58,5 @@ public class CommentController {
     public Page<CommentInfoDto> getComments(@PathVariable Integer postId,
                                             @PageableDefault(size = 5, sort = "createdBy", direction = Sort.Direction.DESC)Pageable pageable){
         return commentService.get(postId, pageable);
-    }
-
-    @MessageMapping("/posts/{postId}/comments")
-    @SendTo("/posts/{postId}")
-    public CommentNotification sendNotification(){
-        return new CommentNotification();
     }
 }

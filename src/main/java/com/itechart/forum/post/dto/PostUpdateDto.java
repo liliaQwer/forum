@@ -2,10 +2,10 @@ package com.itechart.forum.post.dto;
 
 import com.itechart.forum.post.type.CategoryType;
 import lombok.Data;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
@@ -22,4 +22,7 @@ public class PostUpdateDto {
     private String description;
 
     private String content;
+
+    private int version;
+
 }

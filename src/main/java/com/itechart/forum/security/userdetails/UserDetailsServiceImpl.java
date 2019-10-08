@@ -1,6 +1,5 @@
 package com.itechart.forum.security.userdetails;
 
-import com.itechart.forum.common.exception.ResourceNotFoundException;
 import com.itechart.forum.user.dto.UserFullInfoDto;
 import com.itechart.forum.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

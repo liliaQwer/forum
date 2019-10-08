@@ -1,7 +1,6 @@
 package com.itechart.forum.user.service;
 
 import com.itechart.forum.common.exception.AlreadyExistException;
-import com.itechart.forum.common.exception.ResourceNotFoundException;
 import com.itechart.forum.user.dto.UserAddDto;
 import com.itechart.forum.user.dto.UserFullInfoDto;
 import com.itechart.forum.user.entity.User;
@@ -67,7 +66,7 @@ public class UserServiceImpl implements UserService{
         if (userRepository.existsByEmailIgnoreCase(userAddDto.getEmail())){
             throw new AlreadyExistException("User already exists with the same email " + userAddDto.getEmail());
         }
-        if (userRepository.existsByLoginIgnoreCase(userAddDto.getLogin())){
+        if (userRepository.existsByLogin(userAddDto.getLogin())){
             throw new AlreadyExistException("User already exists with the same login " + userAddDto.getLogin());
         }
     }

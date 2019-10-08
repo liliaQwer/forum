@@ -1,5 +1,6 @@
 package com.itechart.forum.post.service;
 
+import com.itechart.forum.common.exception.OptimisticLockingException;
 import com.itechart.forum.common.exception.ResourceNotFoundException;
 import com.itechart.forum.post.dto.*;
 import org.springframework.data.domain.Page;
@@ -14,7 +15,7 @@ public interface PostService {
     int save(PostAddDto postAddDto);
 
     @Transactional
-    void update(UserDetails userDetails, int id, PostUpdateDto postUpdateDto) throws NoPermissionException, ResourceNotFoundException;
+    void update(UserDetails userDetails, int id, PostUpdateDto postUpdateDto) throws NoPermissionException, ResourceNotFoundException, OptimisticLockingException;
 
     @Transactional
     void delete(UserDetails userDetails, int... ids) throws NoPermissionException, ResourceNotFoundException;

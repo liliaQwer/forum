@@ -1,10 +1,9 @@
 package com.itechart.forum.post.controller;
 
+import com.itechart.forum.common.exception.OptimisticLockingException;
 import com.itechart.forum.common.exception.ResourceNotFoundException;
 import com.itechart.forum.post.dto.*;
 import com.itechart.forum.post.service.PostService;
-import com.itechart.forum.post.type.CategoryType;
-import com.itechart.forum.post.type.CategoryTypeConverter;
 import com.itechart.forum.security.userdetails.UserDetailsImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.NoPermissionException;
@@ -59,7 +57,7 @@ public class PostController {
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<PostInfoDto> editPost(Authentication authentication, @PathVariable int id, @Valid @RequestBody PostUpdateDto postAddDto)
-            throws NoPermissionException, ResourceNotFoundException {
+            throws NoPermissionException, ResourceNotFoundException, OptimisticLockingException {
         UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
         postService.update(userDetails, id, postAddDto);
         return ResponseEntity.ok().build();

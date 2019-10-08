@@ -20,5 +20,4 @@ public class CommonConfig {
     public AuditorAware<String> auditorProvider() {
         return new AuditorAwareImpl();
     }
-
 }

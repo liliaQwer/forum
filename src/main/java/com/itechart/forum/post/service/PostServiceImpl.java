@@ -1,5 +1,6 @@
 package com.itechart.forum.post.service;
 
+import com.itechart.forum.common.exception.OptimisticLockingException;
 import com.itechart.forum.common.exception.ResourceNotFoundException;
 import com.itechart.forum.post.dto.*;
 import com.itechart.forum.post.entity.Post;
@@ -24,9 +25,10 @@ import javax.naming.NoPermissionException;
 import javax.persistence.EntityNotFoundException;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class PostServiceImpl implements PostService{
+public class PostServiceImpl implements PostService {
     @Value("${pagination.page_size.min}")
     private int minPageSize;
 
@@ -40,10 +42,11 @@ public class PostServiceImpl implements PostService{
 
     private ModelMapper modelMapper;
 
-    private Type commentListType = new TypeToken<List<CommentDto>>() {}.getType();
+    private Type commentListType = new TypeToken<List<CommentDto>>() {
+    }.getType();
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, ModelMapper modelMapper){
+    public PostServiceImpl(PostRepository postRepository, ModelMapper modelMapper) {
         this.postRepository = postRepository;
         this.modelMapper = modelMapper;
 
@@ -78,15 +81,16 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void update(UserDetails userDetails, int id, PostUpdateDto postUpdateDto) throws NoPermissionException, ResourceNotFoundException {
+    public void update(UserDetails userDetails, int id, PostUpdateDto postUpdateDto) throws NoPermissionException, ResourceNotFoundException, OptimisticLockingException {
         Post post = getPostIfAllowed(userDetails, id);
+        checkVersion(postUpdateDto.getVersion(), post);
         postUpdateDto.setId(id);
         modelMapper.map(postUpdateDto, post);
     }
 
     @Override
     public void delete(UserDetails userDetails, int... ids) throws NoPermissionException, ResourceNotFoundException {
-        for (int id: ids){
+        for (int id : ids) {
             getPostIfAllowed(userDetails, id);
             postRepository.deleteById(id);
         }
@@ -99,7 +103,7 @@ public class PostServiceImpl implements PostService{
         }
         QPost post = QPost.post;
         BooleanBuilder predicate = new BooleanBuilder();
-        if (filter.getCategory() != null && filter.getCategory() != CategoryType.All){
+        if (filter.getCategory() != null && filter.getCategory() != CategoryType.All) {
             predicate.and(post.category.eq(filter.getCategory()));
         }
 //        if (filter.getTitle() != null){
@@ -118,7 +122,7 @@ public class PostServiceImpl implements PostService{
         try {
             post = postRepository.getOne(id);
             post.getId();
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Post not found with this id: " + id);
         }
         return modelMapper.map(post, PostInfoDto.class);
@@ -126,12 +130,12 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public PostFullInfoDto getFullInfoById(Integer id) throws ResourceNotFoundException {
-        Post post = postRepository.findById(id).get();
-        if (post == null){
+        Optional<Post> post = postRepository.findById(id);
+        if (!post.isPresent()) {
             throw new ResourceNotFoundException("Post not found with this id: " + id);
         }
-        PostFullInfoDto fullPost = modelMapper.map(post, PostFullInfoDto.class);
-        List<CommentDto> comments = modelMapper.map(post.getCommentList(), commentListType);
+        PostFullInfoDto fullPost = modelMapper.map(post.get(), PostFullInfoDto.class);
+        List<CommentDto> comments = modelMapper.map(post.get().getCommentList(), commentListType);
         fullPost.setComments(comments);
         return fullPost;
     }
@@ -142,13 +146,21 @@ public class PostServiceImpl implements PostService{
         try {
             post = postRepository.getOne(id);
             post.getId();
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Post not found with this id: " + id);
         }
         if (!post.getCreatedBy().equals(userDetails.getUsername()) &&
-                !userDetails.getAuthorities().contains("ADMIN")){
+                !userDetails.getAuthorities().contains("ADMIN")) {
             throw new NoPermissionException("You have no permission for this operation with post with id: " + id);
         }
         return post;
+//        return postRepository.getOne(id);
     }
+
+    private void checkVersion(int oldVersion, Post post) throws OptimisticLockingException {
+        if (oldVersion != post.getVersion()) {
+            throw new OptimisticLockingException("Post has already been updated by " + post.getCreatedBy());
+        }
+    }
+
 }

@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Integer>, QuerydslPr
     @Query("update User set password = :password where id = :id")
     void updatePassword(@Param("password") String password, @Param("id") Integer id);
 
-    boolean existsByLoginIgnoreCase(String login);
+    boolean existsByLogin(String login);
 
     boolean existsByEmailIgnoreCase(String email);
 }

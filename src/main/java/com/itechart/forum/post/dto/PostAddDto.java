@@ -3,8 +3,6 @@ package com.itechart.forum.post.dto;
 import com.itechart.forum.post.type.CategoryType;
 import lombok.Data;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

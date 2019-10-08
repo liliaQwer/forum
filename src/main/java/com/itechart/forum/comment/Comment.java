@@ -1,8 +1,6 @@
 package com.itechart.forum.comment;
 
 import com.itechart.forum.post.entity.Post;
-import com.itechart.forum.user.entity.User;
-import javafx.geometry.Pos;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;

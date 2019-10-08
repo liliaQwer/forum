@@ -1,7 +1,5 @@
 package com.itechart.forum.comment.dto;
 
-import com.itechart.forum.post.dto.PostInfoDto;
-import com.itechart.forum.user.entity.User;
 import lombok.Data;
 
 import java.time.LocalDate;

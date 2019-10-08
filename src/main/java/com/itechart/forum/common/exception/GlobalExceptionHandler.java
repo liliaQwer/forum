@@ -1,10 +1,8 @@
 package com.itechart.forum.common.exception;
 
-import com.itechart.forum.user.restore.entity.PasswordRestoreToken;
 import com.itechart.forum.user.restore.exception.PasswordRestoreException;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +22,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(OptimisticLockingException.class)
+    public ResponseEntity<?> optimisticLockingFailureExceptio(OptimisticLockingException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), Arrays.asList(ex.getMessage()));
+        log.error(errorDetails.toString());
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> resourceNotFoundexception(ResourceNotFoundException ex, WebRequest request) {

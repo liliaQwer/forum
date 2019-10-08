@@ -1,7 +1,5 @@
 package com.itechart.forum.post.type;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.util.Arrays;
 
 public enum CategoryType {
 
@@ -13,7 +11,7 @@ public enum CategoryType {
 
     private Integer value;
 
-    private CategoryType (Integer value) {
+    CategoryType (Integer value) {
         this.value = value;
     }
 
