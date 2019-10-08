@@ -4,6 +4,8 @@ import com.itechart.forum.comment.Comment;
 import com.itechart.forum.post.type.CategoryType;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -35,6 +37,7 @@ public class Post {
     //    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    @PrimaryKeyJoinColumn
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "post")
+    @Fetch(FetchMode.JOIN)
     private PostContent content;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", orphanRemoval = true)

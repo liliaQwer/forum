@@ -5,10 +5,5 @@ import lombok.Data;
 
 @Data
 public class PostFilterDto {
-
-//    private String title;
-
     private CategoryType category;
-
-//    private LocalDate createdDate;
 }

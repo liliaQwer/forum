@@ -42,9 +42,6 @@ public class PostServiceImpl implements PostService {
 
     private ModelMapper modelMapper;
 
-    private Type commentListType = new TypeToken<List<CommentDto>>() {
-    }.getType();
-
     @Autowired
     public PostServiceImpl(PostRepository postRepository, ModelMapper modelMapper) {
         this.postRepository = postRepository;
@@ -101,19 +98,13 @@ public class PostServiceImpl implements PostService {
         if (pageable.getPageSize() < minPageSize || pageable.getPageSize() > maxPageSize) {
             pageable = PageRequest.of(pageable.getPageNumber(), defaultPageSize, Sort.Direction.DESC, "createdDate");
         }
-        QPost post = QPost.post;
-        BooleanBuilder predicate = new BooleanBuilder();
+        Page<PostInfoDto> postInfoDto;
         if (filter.getCategory() != null && filter.getCategory() != CategoryType.All) {
-            predicate.and(post.category.eq(filter.getCategory()));
+            postInfoDto = postRepository.findAllByCategoryWithoutContent( filter.getCategory(), pageable);
+        }else{
+            postInfoDto = postRepository.findAllWithoutContent( pageable);
         }
-//        if (filter.getTitle() != null){
-//            predicate.and(post.title.contains(filter.getTitle()));
-//        }
-//        if (filter.getCreatedDate() != null){
-//            predicate.and(post.createdDate.eq(filter.getCreatedDate()));
-//        }
-        Page<Post> postPage = postRepository.findAll(predicate, pageable);
-        return postPage.map((postElement) -> modelMapper.map(postElement, PostInfoDto.class));
+        return postInfoDto;
     }
 
     @Override
