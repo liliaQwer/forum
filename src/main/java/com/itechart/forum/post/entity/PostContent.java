@@ -18,7 +18,7 @@ public class PostContent{
     private String body;
 
     @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "post_id")
     private Post post;
 }

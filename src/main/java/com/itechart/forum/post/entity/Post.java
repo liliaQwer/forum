@@ -33,10 +33,7 @@ public class Post {
 
     private String description;
 
-
-    //    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @PrimaryKeyJoinColumn
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "post")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "post")
     @Fetch(FetchMode.JOIN)
     private PostContent content;
 

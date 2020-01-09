@@ -3,14 +3,12 @@ package com.itechart.forum.post.repository;
 import com.itechart.forum.post.dto.PostInfoDto;
 import com.itechart.forum.post.entity.Post;
 import com.itechart.forum.post.type.CategoryType;
-import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
-
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer>, QuerydslPredicateExecutor<Post> {
