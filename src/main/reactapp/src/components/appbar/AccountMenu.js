@@ -4,7 +4,7 @@ import React from "react";
 import IconButton from "@material-ui/core/IconButton";
 import {AccountCircle} from "@material-ui/icons";
 
-export default function AccountMenu(){
+export default function AccountMenu(props){
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const isMenuOpen = Boolean(anchorEl);
@@ -16,6 +16,7 @@ export default function AccountMenu(){
 
     const handleMenuClose = () => {
         setAnchorEl(null);
+        //props.history.push('/signin');
     };
 
     const menuId = 'account-menu';
