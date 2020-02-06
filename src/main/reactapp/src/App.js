@@ -16,6 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from "@material-ui/core/Avatar";
 import Template from "./Template";
 import SignIn from "./components/signin/SignIn";
+import SignUp from "./components/signin/SignUp";
 import NotFound from "./components/NotFound";
 
 function App() {
@@ -24,7 +25,8 @@ function App() {
            <Switch>
                <Route path="/" exact component={SignIn} />
                <Route path="/signin" exact component={SignIn} />
-               <Route path="/signup" exact component={Template} />
+               <Route path="/signup" exact component={SignUp} />
+               <Route path="/posts" exact component={Template} />
                <Route component={NotFound} />
            </Switch>
        </Router>

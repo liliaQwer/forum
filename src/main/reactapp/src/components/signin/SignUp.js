@@ -9,7 +9,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
-import { Link as RouterLink } from "react-router-dom";
 import React from "react";
 
 const useStyles = makeStyles(theme => ({
@@ -47,7 +46,7 @@ export default function () {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography variant="h5">
-                    Sign in
+                    Sign up
                 </Typography>
                 <form className={classes.form}>
                     <TextField
@@ -58,8 +57,18 @@ export default function () {
                         id="email"
                         label="Email Address"
                         name="email"
-                        autoComplete="email"
                         autoFocus
+                        autoComplete="new-password"
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="login"
+                        label="Login"
+                        name="login"
+                        autoComplete="new-password"
                     />
                     <TextField
                         variant="outlined"
@@ -70,7 +79,18 @@ export default function () {
                         label="Password"
                         type="password"
                         id="password"
-                        autoComplete="current-password"
+                        autoComplete="new-password"
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="confirm_password"
+                        label="Confirm Password"
+                        type="password"
+                        id="confirm_password"
+                        autoComplete="new-password"
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
@@ -82,21 +102,10 @@ export default function () {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
+                        href="/posts"
                     >
-                        Sign In
+                        Sign Up
                     </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2">
-                                Forgot password?
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link to="/signUp" variant="body2" component={RouterLink}>
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
                 </form>
             </div>
         </Container>
