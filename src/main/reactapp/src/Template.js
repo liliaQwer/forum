@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import ForumLogo from './images/forum8.png'
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Container from "@material-ui/core/Container";
 import TablePagination from '@material-ui/core/TablePagination';
 import IconButton from '@material-ui/core/IconButton';
@@ -49,7 +49,7 @@ function Template() {
         <PrimaryAppBar />
         <Container fixed maxWidth="lg" className={classes.container}>
             <div style={({textAlign: 'center'})}>
-                <img className={classes.forumLogo} src={ForumLogo} align="center"></img>
+                <img className={classes.forumLogo} alt="forum" src={ForumLogo} align="center"></img>
             </div>
             <div className={classes.paper}>
                 <EnhancedTable/>

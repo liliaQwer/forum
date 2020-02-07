@@ -5,7 +5,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
-import {Box, makeStyles} from "@material-ui/core";
+import { makeStyles} from "@material-ui/core";
 import React from "react";
 import {blueGrey} from "@material-ui/core/colors";
 
