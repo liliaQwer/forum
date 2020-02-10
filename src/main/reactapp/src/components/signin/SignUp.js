@@ -3,18 +3,19 @@ import Container from "@material-ui/core/Container";
 import Avatar from "@material-ui/core/Avatar";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
-import { TextValidator, ValidatorForm } from "react-material-ui-form-validator"
-import React, { useState } from "react";
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import UserService from "../../services/UserService";
 
 
 const useStyles = makeStyles(theme => ({
     container: {
         backgroundColor: 'white',
-        borderRadius: '5px',
+        borderRadius: '5px'
     },
     paper: {
         marginTop: theme.spacing(8),
@@ -38,15 +39,42 @@ const useStyles = makeStyles(theme => ({
 
 export default function () {
     const classes = useStyles();
+
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [email, setEmail] = useState("");
     const [login, setLogin] = useState("");
 
+    const history = useHistory();
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("onsubmit")
+        console.log("onsubmit");
+        UserService.signUp(email, login, password)
+            .then(
+                response => {
+                    const token = response.data;
+                    history.push(`/posts`);
+                }
+            )
+            .catch(
+                error => {
+                    console.log(error);
+            });
     };
+
+    useEffect(() => {
+        ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
+            console.log("checkPAsswords");
+            return value == password;
+        });
+    });
+
+    useEffect(() => {
+        return () => {
+            ValidatorForm.removeValidationRule('isPasswordMatch');
+        }
+    }, []);
 
     return (
         <Container maxWidth="xs" className={classes.container}>
@@ -61,7 +89,7 @@ export default function () {
                 <ValidatorForm
                     className={classes.form}
                     onSubmit={handleSubmit}
-                    debounceTime={3000}
+                    debounceTime={500}
                 >
                     <TextValidator
                         variant="outlined"
@@ -77,7 +105,7 @@ export default function () {
                         validators={['required', 'isEmail']}
                         errorMessages={['this field is required', 'email is not valid']}
                     />
-                    <TextField
+                    <TextValidator
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -87,8 +115,10 @@ export default function () {
                         value={login}
                         onChange={(e)=>setLogin(e.target.value)}
                         autoComplete="new-password"
+                        validators={['required', 'maxStringLength:20']}
+                        errorMessages={['this field is required', 'maximum 20 characters']}
                     />
-                    <TextField
+                    <TextValidator
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -99,8 +129,10 @@ export default function () {
                         value={password}
                         onChange={(e)=>setPassword(e.target.value)}
                         autoComplete="new-password"
+                        validators={['required', 'maxStringLength:20']}
+                        errorMessages={['this field is required', 'maximum 20 characters']}
                     />
-                    <TextField
+                    <TextValidator
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -111,6 +143,8 @@ export default function () {
                         value={confirmPassword}
                         onChange={(e)=>setConfirmPassword(e.target.value)}
                         autoComplete="new-password"
+                        validators={['isPasswordMatch', 'required', 'maxStringLength:20']}
+                        errorMessages={['password mismatch', 'this field is required', 'maximum 20 characters']}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}

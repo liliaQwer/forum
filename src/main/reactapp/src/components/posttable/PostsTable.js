@@ -8,6 +8,7 @@ import Avatar from "@material-ui/core/Avatar";
 import { makeStyles} from "@material-ui/core";
 import React from "react";
 import {blueGrey} from "@material-ui/core/colors";
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles(theme => ({
     table: {
@@ -46,17 +47,19 @@ export default function PostsTable(props){
                                     key={row.name}
                                 >
                                     <TableCell padding="none">
-                                        <Typography color="textPrimary">
-                                            {row.name}
+                                        <Typography fontWeight="fontWeightBold" color="textPrimary">
+                                            <Box component="span" fontWeight="fontWeightBold">
+                                                {row.name}
+                                            </Box>
                                         </Typography>
                                     </TableCell>
                                     <TableCell align="left">
-                                        <Typography color="textSecondary">
+                                        <Typography  color="textPrimary">
                                             {row.definition}
                                         </Typography>
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Typography color="textSecondary">
+                                        <Typography color="textPrimary">
                                             {row.createDate}
                                         </Typography>
                                     </TableCell>

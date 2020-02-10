@@ -16,6 +16,9 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(1),
         backgroundColor: 'white',
         borderRadius: '5px',
+        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.9), rgba(236, 236, 243, 0.9)),url(${ForumLogo})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '100% 100%',
     },
     forumLogo: {
         marginRight: 'auto',
@@ -48,9 +51,9 @@ function Template() {
         <React.Fragment>
         <PrimaryAppBar />
         <Container fixed maxWidth="lg" className={classes.container}>
-            <div style={({textAlign: 'center'})}>
-                <img className={classes.forumLogo} alt="forum" src={ForumLogo} align="center"></img>
-            </div>
+            {/*<div style={({textAlign: 'center'})}>*/}
+            {/*    <img className={classes.forumLogo} alt="forum" src={ForumLogo} align="center"></img>*/}
+            {/*</div>*/}
             <div className={classes.paper}>
                 <EnhancedTable/>
             </div>
