@@ -1,12 +1,13 @@
 import axios from "axios";
-
-const FORUM_API_URL = "http://localhost:8080";
-const USER_API_URL = `${FORUM_API_URL}/user`;
+import {SIGNIN, SIGNUP, USER_API_URL} from "../utils/Url";
 
 class UserDataService {
     signUp(email, login, password) {
-        console.log(`${USER_API_URL}/signup`);
-        return axios.post(`${USER_API_URL}/signup`, {email, login, password} );
+        return axios.post(`${USER_API_URL}/${SIGNUP}`, {email, login, password} );
+    }
+
+    signIn(login, password) {
+        return axios.post(`${USER_API_URL}/${SIGNIN}`, {login, password} );
     }
 }
 

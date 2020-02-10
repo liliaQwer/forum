@@ -6,11 +6,14 @@ import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
+import { Alert } from "@material-ui/lab";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import UserService from "../../services/UserService";
-
+import { MAX_LENGTH, EMAIL_NOT_VALID, REQUIRED_FIELD, PASSWORD_MISMATCH} from "../../utils/ValidationError";
+import {MAX_EMAIL_LENGTH, MAX_LOGIN_LENGTH, MAX_PASSWORD_LENGTH} from "../../utils/ValidationRules";
+import {POSTS} from "../../utils/Url";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -44,29 +47,33 @@ export default function () {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [email, setEmail] = useState("");
     const [login, setLogin] = useState("");
+    const [serverError, setServerError] = useState("");
+    const [serverErrorOn, setServerErrorOn] = useState(false);
 
     const history = useHistory();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = (event) => {
+        event.preventDefault();
         console.log("onsubmit");
         UserService.signUp(email, login, password)
             .then(
                 response => {
                     const token = response.data;
-                    history.push(`/posts`);
+                    localStorage.setItem('token', token);
+                    history.push(`/${POSTS}`);
                 }
             )
             .catch(
                 error => {
-                    console.log(error);
+                    setServerErrorOn(true);
+                    setServerError(error.response.data.error);
             });
     };
 
     useEffect(() => {
         ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
             console.log("checkPAsswords");
-            return value == password;
+            return value === password;
         });
     });
 
@@ -75,6 +82,16 @@ export default function () {
             ValidatorForm.removeValidationRule('isPasswordMatch');
         }
     }, []);
+
+    const handleEmailChange = (event) =>{
+        setEmail(event.target.value);
+        setServerErrorOn(false);
+    };
+
+    const handleLoginChange = (event) =>{
+        setLogin(event.target.value);
+        setServerErrorOn(false);
+    };
 
     return (
         <Container maxWidth="xs" className={classes.container}>
@@ -99,11 +116,11 @@ export default function () {
                         label="Email Address"
                         name="email"
                         value={email}
-                        onChange={(e)=>setEmail(e.target.value)}
+                        onChange={handleEmailChange}
                         autoFocus
                         autoComplete="new-password"
-                        validators={['required', 'isEmail']}
-                        errorMessages={['this field is required', 'email is not valid']}
+                        validators={['required', 'isEmail', `maxStringLength:${MAX_EMAIL_LENGTH}`]}
+                        errorMessages={[REQUIRED_FIELD, EMAIL_NOT_VALID, MAX_LENGTH(MAX_EMAIL_LENGTH)]}
                     />
                     <TextValidator
                         variant="outlined"
@@ -113,10 +130,10 @@ export default function () {
                         label="Login"
                         name="login"
                         value={login}
-                        onChange={(e)=>setLogin(e.target.value)}
+                        onChange={handleLoginChange}
                         autoComplete="new-password"
-                        validators={['required', 'maxStringLength:20']}
-                        errorMessages={['this field is required', 'maximum 20 characters']}
+                        validators={['required', `maxStringLength:${MAX_LOGIN_LENGTH}`]}
+                        errorMessages={[REQUIRED_FIELD, MAX_LENGTH(MAX_LOGIN_LENGTH)]}
                     />
                     <TextValidator
                         variant="outlined"
@@ -129,8 +146,8 @@ export default function () {
                         value={password}
                         onChange={(e)=>setPassword(e.target.value)}
                         autoComplete="new-password"
-                        validators={['required', 'maxStringLength:20']}
-                        errorMessages={['this field is required', 'maximum 20 characters']}
+                        validators={['required', `maxStringLength:${MAX_PASSWORD_LENGTH}`]}
+                        errorMessages={[REQUIRED_FIELD, MAX_LENGTH(MAX_PASSWORD_LENGTH)]}
                     />
                     <TextValidator
                         variant="outlined"
@@ -143,13 +160,18 @@ export default function () {
                         value={confirmPassword}
                         onChange={(e)=>setConfirmPassword(e.target.value)}
                         autoComplete="new-password"
-                        validators={['isPasswordMatch', 'required', 'maxStringLength:20']}
-                        errorMessages={['password mismatch', 'this field is required', 'maximum 20 characters']}
+                        validators={['isPasswordMatch', 'required', `maxStringLength:${MAX_PASSWORD_LENGTH}`]}
+                        errorMessages={[PASSWORD_MISMATCH, REQUIRED_FIELD, MAX_LENGTH(MAX_PASSWORD_LENGTH)]}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
                         label="Remember me"
                     />
+                    {serverErrorOn &&
+                        <Alert severity="error">
+                            {serverError}
+                        </Alert>
+                    }
                     <Button
                         type="submit"
                         fullWidth

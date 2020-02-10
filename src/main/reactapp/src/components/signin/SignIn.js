@@ -3,14 +3,20 @@ import Container from "@material-ui/core/Container";
 import Avatar from "@material-ui/core/Avatar";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import { Link as RouterLink } from "react-router-dom";
-import React from "react";
+import React, {useState} from "react";
+import { useHistory } from "react-router-dom";
+import UserService from "../../services/UserService";
+import {Alert} from "@material-ui/lab";
+import {MAX_LENGTH, REQUIRED_FIELD, USER_UNAUTHORIZED} from "../../utils/ValidationError";
+import {MAX_PASSWORD_LENGTH, MAX_LOGIN_LENGTH} from "../../utils/ValidationRules";
+import {POSTS} from "../../utils/Url";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -39,6 +45,46 @@ const useStyles = makeStyles(theme => ({
 
 export default function () {
     const classes = useStyles();
+
+    const [password, setPassword] = useState("");
+    const [login, setLogin] = useState("");
+    const [serverError, setServerError] = useState("");
+    const [serverErrorOn, setServerErrorOn] = useState(false);
+
+    const history = useHistory();
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log("onsubmit");
+        UserService.signIn(login, password)
+            .then(
+                response => {
+                    const token = response.data;
+                    localStorage.setItem('token', token);
+                    history.push(`/${POSTS}`);
+                }
+            )
+            .catch(
+                error => {
+                    if (error.response.status === 401) {
+                        setServerError(USER_UNAUTHORIZED);
+                    } else {
+                        setServerError(error.response.data.details);
+                    }
+                    setServerErrorOn(true);
+                });
+    };
+
+    const handleLoginChange = (event) => {
+        setLogin(event.target.value);
+        setServerErrorOn(false);
+    };
+
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+        setServerErrorOn(false);
+    };
+
     return (
         <Container maxWidth="xs" className={classes.container}>
 
@@ -49,33 +95,50 @@ export default function () {
                 <Typography variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form}>
-                    <TextField
+                <ValidatorForm
+                    className={classes.form}
+                    onSubmit={handleSubmit}
+                    autoComplete="new-password"
+                >
+                    <TextValidator
                         variant="outlined"
                         margin="normal"
-                        required
                         fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
+                        id="login"
+                        label="Login"
+                        name="login"
+                        value={login}
+                        onChange={handleLoginChange}
+                        autoComplete="new-password"
                         autoFocus
+                        validators={['required', `maxStringLength:${MAX_LOGIN_LENGTH}`]}
+                        errorMessages={[REQUIRED_FIELD, MAX_LENGTH(MAX_LOGIN_LENGTH)]}
+                        maxLength={MAX_LOGIN_LENGTH}
                     />
-                    <TextField
+                    <TextValidator
                         variant="outlined"
                         margin="normal"
-                        required
                         fullWidth
                         name="password"
                         label="Password"
+                        value={password}
+                        onChange={handlePasswordChange}
                         type="password"
                         id="password"
-                        autoComplete="current-password"
+                        maxLength={MAX_PASSWORD_LENGTH}
+                        validators={['required', `maxStringLength:${MAX_PASSWORD_LENGTH}`]}
+                        errorMessages={[REQUIRED_FIELD, MAX_LENGTH(MAX_PASSWORD_LENGTH)]}
+                        autoComplete="new-password"
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
                         label="Remember me"
                     />
+                    {serverErrorOn &&
+                    <Alert severity="error">
+                        {serverError}
+                    </Alert>
+                    }
                     <Button
                         type="submit"
                         fullWidth
@@ -92,12 +155,12 @@ export default function () {
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link to="/signUp" variant="body2" component={RouterLink}>
+                            <Link to="/signup" variant="body2" component={RouterLink}>
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>
                     </Grid>
-                </form>
+                </ValidatorForm>
             </div>
         </Container>
     );

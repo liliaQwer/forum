@@ -5,15 +5,16 @@ import Template from "./Template";
 import SignIn from "./components/signin/SignIn";
 import SignUp from "./components/signin/SignUp";
 import NotFound from "./components/NotFound";
+import {POSTS, SIGNIN, SIGNUP} from "./utils/Url";
 
 function App() {
     return (
        <Router>
            <Switch>
                <Route path="/" exact component={SignIn} />
-               <Route path="/signin" exact component={SignIn} />
-               <Route path="/signup" exact component={SignUp} />
-               <Route path="/posts" exact component={Template} />
+               <Route path={`/${SIGNIN}`} exact component={SignIn} />
+               <Route path={`/${SIGNUP}`} exact component={SignUp} />
+               <Route path={`/${POSTS}`} exact component={Template} />
                <Route component={NotFound} />
            </Switch>
        </Router>
