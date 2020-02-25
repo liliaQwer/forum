@@ -25,7 +25,6 @@ export default function PostsTable(props){
     const classes = useStyles();
     const page = props.page;
     const rowsPerPage = props.rowsPerPage;
-
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.rows.length - page * rowsPerPage);
 
     return (
@@ -38,29 +37,28 @@ export default function PostsTable(props){
             >
                 <TableBody>
                     {props.rows
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((row, index) => {
                             return (
                                 <TableRow
                                     hover
                                     tabIndex={-1}
-                                    key={row.name}
+                                    key={row.id}
                                 >
                                     <TableCell padding="none">
                                         <Typography fontWeight="fontWeightBold" color="textPrimary">
                                             <Box component="span" fontWeight="fontWeightBold">
-                                                {row.name}
+                                                {row.title}
                                             </Box>
                                         </Typography>
                                     </TableCell>
                                     <TableCell align="left">
                                         <Typography  color="textPrimary">
-                                            {row.definition}
+                                            {row.description}
                                         </Typography>
                                     </TableCell>
                                     <TableCell align="right">
                                         <Typography color="textPrimary">
-                                            {row.createDate}
+                                            {row.createdDate}
                                         </Typography>
                                     </TableCell>
                                     <TableCell align="right">

@@ -37,8 +37,8 @@ public class PostController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<PostFullInfoDto> getFullPostById(@PathVariable int id) throws ResourceNotFoundException {
-        PostFullInfoDto post = postService.getFullInfoById(id);
+    public ResponseEntity<PostInfoDto> getPostById(@PathVariable int id) throws ResourceNotFoundException {
+        PostInfoDto post = postService.getById(id);
         return ResponseEntity.ok().body(post);
     }
 

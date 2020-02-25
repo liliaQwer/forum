@@ -1,7 +1,8 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Template from "./Template";
+import MainPage from "./components/MainPage";
+import MainPage2 from "./components/MainPage2";
 import SignIn from "./components/signin/SignIn";
 import SignUp from "./components/signin/SignUp";
 import NotFound from "./components/NotFound";
@@ -11,10 +12,10 @@ function App() {
     return (
        <Router>
            <Switch>
-               <Route path="/" exact component={SignIn} />
+               <Route path="/" exact component={MainPage2} />
                <Route path={`/${SIGNIN}`} exact component={SignIn} />
                <Route path={`/${SIGNUP}`} exact component={SignUp} />
-               <Route path={`/${POSTS}`} exact component={Template} />
+               <Route path={`/${POSTS}`} exact component={MainPage} />
                <Route component={NotFound} />
            </Switch>
        </Router>

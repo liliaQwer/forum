@@ -47,7 +47,7 @@ public class PostServiceImpl implements PostService {
         this.postRepository = postRepository;
         this.modelMapper = modelMapper;
 
-        this.modelMapper.addMappings(new PropertyMap<Post, PostFullInfoDto>() {
+        this.modelMapper.addMappings(new PropertyMap<Post, PostInfoDto>() {
             @Override
             protected void configure() {
                 map(source.getContent().getBody(), destination.getContent());
@@ -98,12 +98,13 @@ public class PostServiceImpl implements PostService {
         if (pageable.getPageSize() < minPageSize || pageable.getPageSize() > maxPageSize) {
             pageable = PageRequest.of(pageable.getPageNumber(), defaultPageSize, Sort.Direction.DESC, "createdDate");
         }
-        Page<PostInfoDto> postInfoDto;
+        Page<Post> postDto;
         if (filter.getCategory() != null && filter.getCategory() != CategoryType.All) {
-            postInfoDto = postRepository.findAllByCategoryWithoutContent( filter.getCategory(), pageable);
+            postDto = postRepository.findByCategory( filter.getCategory(), pageable);
         }else{
-            postInfoDto = postRepository.findAllWithoutContent( pageable);
+            postDto = postRepository.findAll( pageable);
         }
+        Page<PostInfoDto> postInfoDto = postDto.map((post)-> modelMapper.map(post, PostInfoDto.class));
         return postInfoDto;
     }
 
@@ -118,17 +119,6 @@ public class PostServiceImpl implements PostService {
         }
         return modelMapper.map(post, PostInfoDto.class);
     }
-
-    @Override
-    public PostFullInfoDto getFullInfoById(Integer id) throws ResourceNotFoundException {
-        Optional<Post> post = postRepository.findById(id);
-        if (!post.isPresent()) {
-            throw new ResourceNotFoundException("Post not found with this id: " + id);
-        }
-        PostFullInfoDto fullPost = modelMapper.map(post.get(), PostFullInfoDto.class);
-        return fullPost;
-    }
-
 
     private Post getPostIfAllowed(UserDetails userDetails, int id) throws NoPermissionException, ResourceNotFoundException {
         Post post;

@@ -25,7 +25,4 @@ public interface PostService {
 
     @Transactional
     PostInfoDto getById(Integer id) throws ResourceNotFoundException;
-
-    @Transactional
-    PostFullInfoDto getFullInfoById(Integer id) throws ResourceNotFoundException;
 }

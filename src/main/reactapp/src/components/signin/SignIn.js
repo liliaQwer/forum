@@ -98,7 +98,6 @@ export default function () {
                 <ValidatorForm
                     className={classes.form}
                     onSubmit={handleSubmit}
-                    autoComplete="new-password"
                 >
                     <TextValidator
                         variant="outlined"
@@ -107,9 +106,9 @@ export default function () {
                         id="login"
                         label="Login"
                         name="login"
+                        autoComplete="new-password"
                         value={login}
                         onChange={handleLoginChange}
-                        autoComplete="new-password"
                         autoFocus
                         validators={['required', `maxStringLength:${MAX_LOGIN_LENGTH}`]}
                         errorMessages={[REQUIRED_FIELD, MAX_LENGTH(MAX_LOGIN_LENGTH)]}
@@ -119,16 +118,16 @@ export default function () {
                         variant="outlined"
                         margin="normal"
                         fullWidth
+                        id="password"
                         name="password"
                         label="Password"
+                        autoComplete="new-password"
                         value={password}
                         onChange={handlePasswordChange}
                         type="password"
-                        id="password"
                         maxLength={MAX_PASSWORD_LENGTH}
                         validators={['required', `maxStringLength:${MAX_PASSWORD_LENGTH}`]}
                         errorMessages={[REQUIRED_FIELD, MAX_LENGTH(MAX_PASSWORD_LENGTH)]}
-                        autoComplete="new-password"
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}

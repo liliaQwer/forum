@@ -1,15 +1,17 @@
-import React from 'react';
-import './App.css';
-import ForumLogo from './images/forum8.png'
-import { makeStyles } from '@material-ui/core/styles';
+import React, {useEffect, useState} from 'react';
+import '../App.css';
+import ForumLogo from '../images/forum8.png'
+import {makeStyles} from '@material-ui/core/styles';
 import Container from "@material-ui/core/Container";
 import TablePagination from '@material-ui/core/TablePagination';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import {Box} from "@material-ui/core";
-import PrimaryAppBar from "./components/appbar/PrimaryAppBar";
-import PostsTable from "./components/posttable/PostsTable";
+import TopAppBar from "./appbar/TopAppBar";
+import PostsTable from "./posttable/PostsTable";
+import PostService from "../services/PostService";
+import BottomAppBar from "./appbar/BottomAppBar";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -22,8 +24,8 @@ const useStyles = makeStyles(theme => ({
     },
     forumLogo: {
         marginRight: 'auto',
-    width: '30%',
-    height: '150px'
+        width: '30%',
+        height: '150px'
     },
     paper: {
         marginTop: theme.spacing(1),
@@ -45,42 +47,23 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Template() {
+function MainPage() {
     const classes = useStyles();
     return (
         <React.Fragment>
-        <PrimaryAppBar />
-        <Container fixed maxWidth="lg" className={classes.container}>
-            {/*<div style={({textAlign: 'center'})}>*/}
-            {/*    <img className={classes.forumLogo} alt="forum" src={ForumLogo} align="center"></img>*/}
-            {/*</div>*/}
-            <div className={classes.paper}>
-                <EnhancedTable/>
-            </div>
-        </Container>
+            <TopAppBar/>
+            <Container fixed maxWidth="lg" className={classes.container}>
+                {/*<div style={({textAlign: 'center'})}>*/}
+                {/*    <img className={classes.forumLogo} alt="forum" src={ForumLogo} align="center"></img>*/}
+                {/*</div>*/}
+                <div className={classes.paper}>
+                    <EnhancedTable/>
+                </div>
+            </Container>
+            <BottomAppBar/>
         </React.Fragment>
     );
 }
-
-function createData(name, definition, createDate, author) {
-    return { name, definition, createDate, author };
-}
-
-const rows = [
-    createData('Science', 'ScienceScienceScienceScienceScience', '01.01.2020', 'chin-chin'),
-    createData('Fashion', 'FashionFashionFashionFashionFashionFashion', '01.01.2020', 'chin-chin'),
-    createData('Politics', 'PoliticsPoliticsPoliticsPoliticsPoliticsPolitics', '01.01.2020', 'chin-chin'),
-    createData('Economy', 'EconomyEconomyEconomyEconomyEconomy', '01.01.2020', 'lola'),
-    createData('Personal', 'PersonalPersonalPersonalPersonalPersonal', '01.01.2020', 'tomSoyer'),
-    createData('Problems', 'ProblemsProblemsProblemsProblemsProblems', '01.01.2020', 'tomSoyer'),
-    createData('Holidays', 'HolidaysHolidaysHolidaysHolidaysHolidays', '01.01.2020', 'tomSoyer'),
-    createData('Songs', 'SongsSongsSongsSongsSongsSongs', '01.01.2020', 'tomSoyer'),
-    createData('Business', 'BusinessBusinessBusinessBusiness', '01.01.2020', 'tomSoyer'),
-    createData('Kids', 'KidsKidsKidsKidsKidsKidsKidsKidsKids', '01.01.2020', 'lola'),
-    createData('Shops', 'ShopsShopsShopsShopsShopsShopsShops', '01.01.2020', 'tomSoyer'),
-    createData('Nougat', 'NougatNougatNougatNougatNougatNougatNougatNougat', '01.01.2020', 'lola'),
-    createData('Oreo', 'OreoOreoOreoOreoOreoOreoOreoOreoOreoOreo', '01.01.2020', 'lola'),
-];
 
 const useToolbarStyles = makeStyles(theme => ({
     alignRight: {
@@ -114,16 +97,31 @@ const EnhancedTable = (props) => {
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rows, setRows] = useState([]);
+    const [totalElements, setTotalElements] = useState(0);
+
+    useEffect(() => {
+        PostService.getPostList(page, rowsPerPage)
+            .then(response => {
+                setRows(response.data.content);
+                setTotalElements(response.data.totalElements);
+            })
+            .catch()
+    }, [page, rowsPerPage]);
+
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
 
     const handleChangeRowsPerPage = event => {
-        setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
+        setRowsPerPage(parseInt(event.target.value, 10));
     };
 
+    if (rows.length === 0) {
+        return null;
+    }
     return (
         <Box className={classes.paper}>
             <EnhancedTableToolbar/>
@@ -135,7 +133,7 @@ const EnhancedTable = (props) => {
             <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={rows.length}
+                count={totalElements}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
@@ -145,4 +143,4 @@ const EnhancedTable = (props) => {
     );
 };
 
-export default Template;
+export default MainPage;

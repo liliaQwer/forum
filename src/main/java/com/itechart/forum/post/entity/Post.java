@@ -15,6 +15,15 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@NamedEntityGraph(
+        name = "post-with-content",
+        attributeNodes = {
+                @NamedAttributeNode("title"),
+                @NamedAttributeNode("description"),
+                @NamedAttributeNode("content"),
+                @NamedAttributeNode("category")
+        }
+)
 @Entity
 @Table(name = "post")
 @EntityListeners(AuditingEntityListener.class)

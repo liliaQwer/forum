@@ -19,6 +19,8 @@ public class PostInfoDto {
 
     private String description;
 
+    private String content;
+
     private LocalDate createdDate;
 
     private String createdBy;
