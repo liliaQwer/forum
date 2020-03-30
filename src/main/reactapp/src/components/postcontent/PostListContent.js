@@ -10,6 +10,9 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import {makeStyles} from '@material-ui/core/styles';
 import TablePagination from "@material-ui/core/TablePagination";
 import PostService from "../../services/PostService";
+import {Container} from "@material-ui/core";
+import { useHistory } from 'react-router-dom';
+import {POSTS} from "../../utils/Url";
 
 const useStyles = makeStyles(theme => ({
     caption: {
@@ -18,8 +21,6 @@ const useStyles = makeStyles(theme => ({
     },
     paper: {
         paddingBottom: 50,
-        width: '75%',
-        margin: 'auto',
         backgroundColor: '#f0eff5'
     },
     list: {
@@ -54,6 +55,7 @@ export default function PostListContent(props) {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [posts, setPosts] = useState([]);
     const [totalElements, setTotalElements] = useState(0);
+    const history = useHistory();
 
     useEffect(() => {
         PostService.getPostList(page, rowsPerPage)
@@ -74,15 +76,20 @@ export default function PostListContent(props) {
         setRowsPerPage(parseInt(event.target.value, 10));
     };
 
+    const handlePostClick = (e, postId) => {
+        console.log(postId);
+        history.push(`/${POSTS}/${postId}`)
+    };
+
     return (
-        <Paper width={3/4} elevation={3} square className={classes.paper}>
+        <Container className={classes.paper}>
             <Typography className={`${classes.caption} ${classes.italic}`} variant="h5" gutterBottom>
                 Here you can find many interesting posts
             </Typography>
             <List className={classes.list}>
                 {posts.map(({id, title, description,createdDate, category}) => (
                     <React.Fragment key={id}>
-                        <ListItem button>
+                        <ListItem button onClick={(e) => handlePostClick(e, id)}>
                             <ListItemAvatar>
                                 <Avatar aria-label="recipe" className={classes.avatar}>
                                     R
@@ -108,6 +115,6 @@ export default function PostListContent(props) {
                 onChangeRowsPerPage={handleChangeRowsPerPage}
                 labelRowsPerPage={'Posts per page:'}
             />
-        </Paper>
+        </Container>
     );
 }

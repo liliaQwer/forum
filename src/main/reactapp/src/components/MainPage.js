@@ -9,7 +9,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import {Box} from "@material-ui/core";
 import TopAppBar from "./appbar/TopAppBar";
-import PostsTable from "./posttable/PostsTable";
+import PostsTable from "./postcontent/PostsTable";
 import PostService from "../services/PostService";
 import BottomAppBar from "./appbar/BottomAppBar";
 

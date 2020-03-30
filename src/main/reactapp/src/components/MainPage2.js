@@ -4,7 +4,7 @@ import ForumLogo from '../images/forum8.png'
 import {makeStyles} from '@material-ui/core/styles';
 import TopAppBar from "./appbar/TopAppBar";
 import BottomAppBar from "./appbar/BottomAppBar";
-import PostListContent from "./posttable/PostListContent";
+import PostListContent from "./postcontent/PostListContent";
 
 const useStyles = makeStyles(theme => ({
     container: {

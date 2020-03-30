@@ -7,6 +7,7 @@ import SignIn from "./components/signin/SignIn";
 import SignUp from "./components/signin/SignUp";
 import NotFound from "./components/NotFound";
 import {POSTS, SIGNIN, SIGNUP} from "./utils/Url";
+import PostContent from "./components/postcontent/PostContent";
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                <Route path={`/${SIGNIN}`} exact component={SignIn} />
                <Route path={`/${SIGNUP}`} exact component={SignUp} />
                <Route path={`/${POSTS}`} exact component={MainPage} />
+               <Route path={`/${POSTS}/:postId`} component={PostContent} />
                <Route component={NotFound} />
            </Switch>
        </Router>
