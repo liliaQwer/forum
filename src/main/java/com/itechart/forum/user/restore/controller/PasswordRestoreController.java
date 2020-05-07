@@ -44,7 +44,7 @@ public class PasswordRestoreController {
         passwordResetTokenService.save(passwordRestoreToken);
 
         emailService.sendEmail(emailToRestoreDto.getEmail(), passwordRestoreToken.getToken());
-        return ResponseEntity.ok().body("Check you mail");
+        return ResponseEntity.ok().body("Check your mail");
     }
 
     @GetMapping

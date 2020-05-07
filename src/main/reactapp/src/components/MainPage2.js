@@ -1,10 +1,14 @@
-import React, {useEffect, useState} from 'react';
 import '../App.css';
+import React from "react";
 import ForumLogo from '../images/forum8.png'
 import {makeStyles} from '@material-ui/core/styles';
 import TopAppBar from "./appbar/TopAppBar";
 import BottomAppBar from "./appbar/BottomAppBar";
 import PostListContent from "./postcontent/PostListContent";
+import { Route, Switch } from 'react-router-dom';
+import {POSTS} from "../utils/Url";
+import PostContent from "./postcontent/PostContent";
+import NotFound from "./NotFound";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -38,7 +42,12 @@ function MainPage2() {
     return (
         <div className={classes.overflow}>
             <TopAppBar/>
-            <PostListContent />
+            <Switch>
+                <Route path={`/${POSTS}`} exact component={PostListContent}/>
+                <Route path={`/`} exact component={PostListContent}/>
+                <Route path={`/${POSTS}/:postId`} component={PostContent}/>
+                <Route component={NotFound} />
+            </Switch>
             <BottomAppBar/>
         </div>
     );

@@ -16,7 +16,8 @@ import UserService from "../../services/UserService";
 import {Alert} from "@material-ui/lab";
 import {MAX_LENGTH, REQUIRED_FIELD, USER_UNAUTHORIZED} from "../../utils/ValidationError";
 import {MAX_PASSWORD_LENGTH, MAX_LOGIN_LENGTH} from "../../utils/ValidationRules";
-import {POSTS} from "../../utils/Url";
+import {POSTS, RESTORE, SIGNUP} from "../../utils/Url";
+import {ANONYMOUS_USER, FORGOT_PASSWORD, SIGN_UP} from "../../utils/AppConstants";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -40,6 +41,15 @@ const useStyles = makeStyles(theme => ({
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
+    },
+    textCenter: {
+        textAlign: 'center'
+    },
+    greenColor: {
+        color: '#008b8b'
+    },
+    link: {
+
     }
 }));
 
@@ -60,7 +70,8 @@ export default function () {
             .then(
                 response => {
                     const token = response.data;
-                    localStorage.setItem('token', token);
+                    console.log(response);
+                    UserService.setAuthenticatedToken(token);
                     history.push(`/${POSTS}`);
                 }
             )
@@ -83,6 +94,12 @@ export default function () {
     const handlePasswordChange = (event) => {
         setPassword(event.target.value);
         setServerErrorOn(false);
+    };
+
+    const handleAnonymousUser = (event) => {
+        event.preventDefault();
+        UserService.signOut();
+        history.push(`${POSTS}`);
     };
 
     return (
@@ -147,15 +164,20 @@ export default function () {
                     >
                         Sign In
                     </Button>
-                    <Grid container>
+                    <Grid container justify="space-between" spacing={2}>
                         <Grid item xs>
-                            <Link href="#" variant="body2">
-                                Forgot password?
+                            <Link to={`/${RESTORE}`}  variant="body2" component={RouterLink}>
+                                {FORGOT_PASSWORD}
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link to="/signup" variant="body2" component={RouterLink}>
-                                {"Don't have an account? Sign Up"}
+                            <Link to={`/${SIGNUP}`}  variant="body2" component={RouterLink}>
+                                {SIGN_UP}
+                            </Link>
+                        </Grid>
+                        <Grid item xs={12} className={classes.textCenter}>
+                            <Link href="#" className={classes.greenColor}  onClick={handleAnonymousUser}>
+                                {ANONYMOUS_USER}
                             </Link>
                         </Grid>
                     </Grid>

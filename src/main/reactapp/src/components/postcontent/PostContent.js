@@ -1,12 +1,19 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Container} from "@material-ui/core";
-import Box from "@material-ui/core/Box";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import {blueGrey} from "@material-ui/core/colors";
 import { useParams } from 'react-router-dom';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import ThumbDownSharpIcon from '@material-ui/icons/ThumbDownSharp';
+import ThumbUpSharpIcon from '@material-ui/icons/ThumbUpSharp';
+import IconButton from '@material-ui/core/IconButton';
+import PostService from "../../services/PostService";
 
 const useStyles = makeStyles(theme => ({
         avatar: {
@@ -15,28 +22,56 @@ const useStyles = makeStyles(theme => ({
             height: theme.spacing(4),
             textAlign: 'center'
         },
+        alignRight: {
+            justifyContent: 'flex-end'
+        }
     })
 );
 
 export default function PostContent(props){
     const classes = useStyles();
     const { postId } = useParams();
-    console.log(`postId=${postId}`);
-
+    const [ post, setPost ] = useState({
+        title: '',
+        createdDate: "",
+        content: ""
+    });
+    
+    useEffect(() => {
+        PostService.getPostById(postId)
+            .then(response => {
+                console.log(response.data);
+                setPost(response.data);
+            })
+            .catch()
+    }, []);
     return (
         <Container>
-            <Box>
-                <Avatar aria-label="recipe" className={classes.avatar}>
-                    R
-                </Avatar>
-                <Typography>fdsdfs
-                </Typography>
-                <Typography>sfsdfsdfs
-                </Typography>
-            </Box>
-            <Box>sdsfsds
-            </Box>
-            <Divider/>
+            <Card className={classes.root}>
+                <CardHeader
+                    avatar={
+                        <Avatar aria-label="recipe" className={classes.avatar}>
+                            R
+                        </Avatar>
+                    }
+                    title={post.title}
+                    subheader={post.createdDate}
+                />
+                <CardContent>
+                    <Typography>
+                        {post.content}
+                    </Typography>
+                </CardContent>
+                <Divider/>
+                <CardActions disableSpacing className={classes.alignRight}>
+                    <IconButton aria-label="add to favorites">
+                        <ThumbUpSharpIcon  color="primary"/>
+                    </IconButton>
+                    <IconButton aria-label="share">
+                        <ThumbDownSharpIcon color="secondary"/>
+                    </IconButton>
+                </CardActions>
+            </Card>
         </Container>
     );
 }

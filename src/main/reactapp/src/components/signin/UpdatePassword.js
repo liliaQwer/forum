@@ -3,16 +3,15 @@ import Container from "@material-ui/core/Container";
 import Avatar from "@material-ui/core/Avatar";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import { Alert } from "@material-ui/lab";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 import UserService from "../../services/UserService";
-import { MAX_LENGTH, EMAIL_NOT_VALID, REQUIRED_FIELD, PASSWORD_MISMATCH} from "../../utils/ValidationError";
-import {MAX_EMAIL_LENGTH, MAX_LOGIN_LENGTH, MAX_PASSWORD_LENGTH} from "../../utils/ValidationRules";
+import { MAX_LENGTH, REQUIRED_FIELD, PASSWORD_MISMATCH} from "../../utils/ValidationError";
+import {MAX_PASSWORD_LENGTH} from "../../utils/ValidationRules";
 import {POSTS} from "../../utils/Url";
 
 const useStyles = makeStyles(theme => ({
@@ -45,17 +44,18 @@ export default function () {
 
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [email, setEmail] = useState("");
-    const [login, setLogin] = useState("");
     const [serverError, setServerError] = useState("");
     const [serverErrorOn, setServerErrorOn] = useState(false);
 
+    const location  = useLocation();
     const history = useHistory();
 
+    const token = location.search.split("=")[1];
+    console.log(token);
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log("onsubmit");
-        UserService.signUp(email, login, password)
+        UserService.updatePassword(token, password, confirmPassword)
             .then(
                 response => {
                     const token = response.data;
@@ -67,7 +67,7 @@ export default function () {
                 error => {
                     setServerErrorOn(true);
                     setServerError(error.response.data.error);
-            });
+                });
     };
 
     useEffect(() => {
@@ -83,16 +83,6 @@ export default function () {
         }
     }, []);
 
-    const handleEmailChange = (event) =>{
-        setEmail(event.target.value);
-        setServerErrorOn(false);
-    };
-
-    const handleLoginChange = (event) =>{
-        setLogin(event.target.value);
-        setServerErrorOn(false);
-    };
-
     return (
         <Container maxWidth="xs" className={classes.container}>
 
@@ -101,40 +91,12 @@ export default function () {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography variant="h5">
-                    Sign up
+                    Password Update
                 </Typography>
                 <ValidatorForm
                     className={classes.form}
                     onSubmit={handleSubmit}
-                    debounceTime={500}
                 >
-                    <TextValidator
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        value={email}
-                        onChange={handleEmailChange}
-                        autoFocus
-                        autoComplete="new-password"
-                        validators={['required', 'isEmail', `maxStringLength:${MAX_EMAIL_LENGTH}`]}
-                        errorMessages={[REQUIRED_FIELD, EMAIL_NOT_VALID, MAX_LENGTH(MAX_EMAIL_LENGTH)]}
-                    />
-                    <TextValidator
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        id="login"
-                        label="Login"
-                        name="login"
-                        value={login}
-                        onChange={handleLoginChange}
-                        autoComplete="new-password"
-                        validators={['required', `maxStringLength:${MAX_LOGIN_LENGTH}`]}
-                        errorMessages={[REQUIRED_FIELD, MAX_LENGTH(MAX_LOGIN_LENGTH)]}
-                    />
                     <TextValidator
                         variant="outlined"
                         margin="normal"
@@ -163,14 +125,10 @@ export default function () {
                         validators={['isPasswordMatch', 'required', `maxStringLength:${MAX_PASSWORD_LENGTH}`]}
                         errorMessages={[PASSWORD_MISMATCH, REQUIRED_FIELD, MAX_LENGTH(MAX_PASSWORD_LENGTH)]}
                     />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    />
                     {serverErrorOn &&
-                        <Alert severity="error">
-                            {serverError}
-                        </Alert>
+                    <Alert severity="error">
+                        {serverError}
+                    </Alert>
                     }
                     <Button
                         type="submit"
@@ -179,7 +137,7 @@ export default function () {
                         color="primary"
                         className={classes.submit}
                     >
-                        Sign Up
+                        Sign In
                     </Button>
                 </ValidatorForm>
             </div>
