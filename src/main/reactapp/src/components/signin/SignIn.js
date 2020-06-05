@@ -1,4 +1,3 @@
-import {makeStyles} from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 import Avatar from "@material-ui/core/Avatar";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -9,49 +8,16 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink,  useHistory } from "react-router-dom";
 import React, {useState} from "react";
-import { useHistory } from "react-router-dom";
 import UserService from "../../services/UserService";
 import {Alert} from "@material-ui/lab";
-import {MAX_LENGTH, REQUIRED_FIELD, USER_UNAUTHORIZED} from "../../utils/ValidationError";
+import {INTERNAL_ERROR, MAX_LENGTH, REQUIRED_FIELD, USER_UNAUTHORIZED} from "../../utils/ErrorMessages";
 import {MAX_PASSWORD_LENGTH, MAX_LOGIN_LENGTH} from "../../utils/ValidationRules";
-import {POSTS, RESTORE, SIGNUP} from "../../utils/Url";
-import {ANONYMOUS_USER, FORGOT_PASSWORD, SIGN_UP} from "../../utils/AppConstants";
-
-const useStyles = makeStyles(theme => ({
-    container: {
-        backgroundColor: 'white',
-        borderRadius: '5px',
-    },
-    paper: {
-        marginTop: theme.spacing(8),
-        paddingBottom: theme.spacing(3),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(1),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-    },
-    textCenter: {
-        textAlign: 'center'
-    },
-    greenColor: {
-        color: '#008b8b'
-    },
-    link: {
-
-    }
-}));
+import {POSTS, RESTORE_API_URL, RESTORE_PASSWORD_URL, SIGNUP_API_URL} from "../../utils/Url";
+import {ANONYMOUS_USER, FORGOT_PASSWORD, SIGN_IN, SIGN_UP_LINK} from "../../utils/AppConstants";
+import {useStyles} from "../../utils/AppStyle";
+import ErrorService from "../../services/ErrorService";
 
 export default function () {
     const classes = useStyles();
@@ -70,18 +36,13 @@ export default function () {
             .then(
                 response => {
                     const token = response.data;
-                    console.log(response);
                     UserService.setAuthenticatedToken(token);
                     history.push(`/${POSTS}`);
                 }
             )
             .catch(
                 error => {
-                    if (error.response.status === 401) {
-                        setServerError(USER_UNAUTHORIZED);
-                    } else {
-                        setServerError(error.response.data.details);
-                    }
+                    ErrorService.showAppropriateError(error, setServerError);
                     setServerErrorOn(true);
                 });
     };
@@ -105,12 +66,12 @@ export default function () {
     return (
         <Container maxWidth="xs" className={classes.container}>
 
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
+            <div className={classes.authPaper}>
+                <Avatar className={classes.authAvatar}>
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography variant="h5">
-                    Sign in
+                    {SIGN_IN}
                 </Typography>
                 <ValidatorForm
                     className={classes.form}
@@ -146,10 +107,6 @@ export default function () {
                         validators={['required', `maxStringLength:${MAX_PASSWORD_LENGTH}`]}
                         errorMessages={[REQUIRED_FIELD, MAX_LENGTH(MAX_PASSWORD_LENGTH)]}
                     />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    />
                     {serverErrorOn &&
                     <Alert severity="error">
                         {serverError}
@@ -162,17 +119,17 @@ export default function () {
                         color="primary"
                         className={classes.submit}
                     >
-                        Sign In
+                        {SIGN_IN}
                     </Button>
                     <Grid container justify="space-between" spacing={2}>
                         <Grid item xs>
-                            <Link to={`/${RESTORE}`}  variant="body2" component={RouterLink}>
+                            <Link to={`${RESTORE_PASSWORD_URL}`}  variant="body2" component={RouterLink}>
                                 {FORGOT_PASSWORD}
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link to={`/${SIGNUP}`}  variant="body2" component={RouterLink}>
-                                {SIGN_UP}
+                            <Link to={`${SIGNUP_API_URL}`}  variant="body2" component={RouterLink}>
+                                {SIGN_UP_LINK}
                             </Link>
                         </Grid>
                         <Grid item xs={12} className={classes.textCenter}>

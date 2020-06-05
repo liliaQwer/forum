@@ -6,7 +6,7 @@ import TopAppBar from "./appbar/TopAppBar";
 import BottomAppBar from "./appbar/BottomAppBar";
 import PostListContent from "./postcontent/PostListContent";
 import { Route, Switch } from 'react-router-dom';
-import {POSTS} from "../utils/Url";
+import {POSTS, POSTS_API_URL} from "../utils/Url";
 import PostContent from "./postcontent/PostContent";
 import NotFound from "./NotFound";
 
@@ -43,9 +43,9 @@ function MainPage2() {
         <div className={classes.overflow}>
             <TopAppBar/>
             <Switch>
-                <Route path={`/${POSTS}`} exact component={PostListContent}/>
+                <Route path={`${POSTS_API_URL}`} exact component={PostListContent}/>
                 <Route path={`/`} exact component={PostListContent}/>
-                <Route path={`/${POSTS}/:postId`} component={PostContent}/>
+                <Route path={`${POSTS_API_URL}/:postId`} component={PostContent}/>
                 <Route component={NotFound} />
             </Switch>
             <BottomAppBar/>

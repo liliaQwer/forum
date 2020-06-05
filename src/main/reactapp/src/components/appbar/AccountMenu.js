@@ -7,6 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import {AccountCircle} from "@material-ui/icons";
 import UserService from "../../services/UserService";
 import {SIGNIN} from "../../utils/Url";
+import {PROFILE, SIGN_IN, SIGN_OUT} from "../../utils/AppConstants";
 
 export default function AccountMenu(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -55,11 +56,11 @@ export default function AccountMenu(props) {
             >
                 {UserService.isAuthenticated() ? (
                     <MenuList variant='menu'>
-                        <MenuItem onClick={handleSignInMenuOpen}>My account</MenuItem>
-                        <MenuItem onClick={handleSignOutMenuOpen}>Sign out</MenuItem>
+                        <MenuItem onClick={handleSignInMenuOpen}>{PROFILE}</MenuItem>
+                        <MenuItem onClick={handleSignOutMenuOpen}>{SIGN_OUT}</MenuItem>
                     </MenuList>
                 ) : (
-                    <MenuItem onClick={handleSignInMenuOpen}>Sign in</MenuItem>
+                    <MenuItem onClick={handleSignInMenuOpen}>{SIGN_IN}</MenuItem>
                 )}
             </Menu>
         </React.Fragment>

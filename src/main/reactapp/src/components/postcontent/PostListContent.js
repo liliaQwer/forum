@@ -3,49 +3,15 @@ import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import {blueGrey} from "@material-ui/core/colors";
 import Avatar from "@material-ui/core/Avatar";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import {makeStyles} from '@material-ui/core/styles';
 import TablePagination from "@material-ui/core/TablePagination";
 import PostService from "../../services/PostService";
 import {Container} from "@material-ui/core";
 import { useHistory } from 'react-router-dom';
-import {POSTS} from "../../utils/Url";
-
-const useStyles = makeStyles(theme => ({
-    caption: {
-        padding: theme.spacing(2, 2, 0),
-        color: 'lightslategrey'
-    },
-    paper: {
-        paddingBottom: 50,
-        backgroundColor: '#f0eff5'
-    },
-    list: {
-        marginBottom: theme.spacing(2),
-    },
-    grow: {
-        flexGrow: 1,
-    },
-    addInfo: {
-        flexGrow: 0.1,
-        display: 'flex',
-        justifyContent: 'flex-end'
-    },
-    avatar: {
-        backgroundColor: blueGrey[500],
-        width: theme.spacing(4),
-        height: theme.spacing(4),
-        textAlign: 'center'
-    },
-    italic: {
-        fontStyle: 'italic'
-    },
-    blueColor: {
-        color: 'cornflowerblue'
-    }
-}));
+import {POSTS_API_URL} from "../../utils/Url";
+import {POST_LIST_CAPTION} from "../../utils/AppConstants";
+import {useStyles} from "../../utils/AppStyle";
 
 export default function PostListContent(props) {
     const classes = useStyles();
@@ -77,13 +43,13 @@ export default function PostListContent(props) {
 
     const handlePostClick = (e, postId) => {
         console.log(postId);
-        history.push(`/${POSTS}/${postId}`)
+        history.push(`${POSTS_API_URL}/${postId}`)
     };
 
     return (
         <Container className={classes.paper}>
             <Typography className={`${classes.caption} ${classes.italic}`} variant="h5" gutterBottom>
-                Here you can find many interesting posts
+                {POST_LIST_CAPTION}
             </Typography>
             <List className={classes.list}>
                 {posts.map(({id, title, description,createdDate, category}) => (
@@ -97,9 +63,9 @@ export default function PostListContent(props) {
                             <ListItemText primary={title} secondary={description}
                                           className={classes.grow}/>
                             <ListItemText secondary={category}
-                                          className={`${classes.addInfo} ${classes.italic}`}/>
+                                          className={`${classes.lessGrow} ${classes.alignRight} ${classes.flex} ${classes.italic}`}/>
                             <ListItemText secondary={new Date(createdDate).toDateString()}
-                                          className={`${classes.addInfo} ${classes.blueColor}`}/>
+                                          className={`${classes.lessGrow} ${classes.alignRight} ${classes.flex} ${classes.blueColor}`}/>
                         </ListItem>
                     </React.Fragment>
                 ))}

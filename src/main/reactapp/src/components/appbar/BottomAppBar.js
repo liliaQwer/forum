@@ -1,27 +1,9 @@
 import React from "react";
-import {makeStyles, Toolbar} from "@material-ui/core";
+import {Toolbar} from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar/AppBar";
 import Typography from "@material-ui/core/Typography";
 import {APP_BOTTOM_TEXT} from "../../utils/AppConstants";
-
-const useStyles = makeStyles(theme => ({
-    grow: {
-        flexGrow: 1,
-    },
-    appBar: {
-        top: 'auto',
-        bottom: '0px',
-        position: 'absolute',
-        backgroundColor: '#201a79'
-    },
-    toolbar: {
-        minHeight: '34px'
-    },
-    title: {
-        textAlign: 'center',
-        color: '#c1baba'
-    }
-}));
+import {useStyles} from "../../utils/AppStyle";
 
 export default function BottomAppBar() {
     const classes = useStyles();

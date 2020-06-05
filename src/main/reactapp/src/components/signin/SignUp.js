@@ -1,4 +1,3 @@
-import {makeStyles} from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 import Avatar from "@material-ui/core/Avatar";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -11,34 +10,12 @@ import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import UserService from "../../services/UserService";
-import { MAX_LENGTH, EMAIL_NOT_VALID, REQUIRED_FIELD, PASSWORD_MISMATCH} from "../../utils/ValidationError";
+import { MAX_LENGTH, EMAIL_NOT_VALID, REQUIRED_FIELD, PASSWORD_MISMATCH} from "../../utils/ErrorMessages";
 import {MAX_EMAIL_LENGTH, MAX_LOGIN_LENGTH, MAX_PASSWORD_LENGTH} from "../../utils/ValidationRules";
 import {POSTS} from "../../utils/Url";
-
-const useStyles = makeStyles(theme => ({
-    container: {
-        backgroundColor: 'white',
-        borderRadius: '5px'
-    },
-    paper: {
-        marginTop: theme.spacing(8),
-        paddingBottom: theme.spacing(3),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(1),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-    }
-}));
+import {SIGN_UP} from "../../utils/AppConstants";
+import {useStyles} from "../../utils/AppStyle";
+import ErrorService from "../../services/ErrorService";
 
 export default function () {
     const classes = useStyles();
@@ -65,8 +42,8 @@ export default function () {
             )
             .catch(
                 error => {
+                    ErrorService.showAppropriateError(error, setServerError);
                     setServerErrorOn(true);
-                    setServerError(error.response.data.error);
             });
     };
 
@@ -96,12 +73,12 @@ export default function () {
     return (
         <Container maxWidth="xs" className={classes.container}>
 
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
+            <div className={classes.authPaper}>
+                <Avatar className={classes.authAvatar}>
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography variant="h5">
-                    Sign up
+                    {SIGN_UP}
                 </Typography>
                 <ValidatorForm
                     className={classes.form}
@@ -163,10 +140,6 @@ export default function () {
                         validators={['isPasswordMatch', 'required', `maxStringLength:${MAX_PASSWORD_LENGTH}`]}
                         errorMessages={[PASSWORD_MISMATCH, REQUIRED_FIELD, MAX_LENGTH(MAX_PASSWORD_LENGTH)]}
                     />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    />
                     {serverErrorOn &&
                         <Alert severity="error">
                             {serverError}
@@ -179,7 +152,7 @@ export default function () {
                         color="primary"
                         className={classes.submit}
                     >
-                        Sign Up
+                        {SIGN_UP}
                     </Button>
                 </ValidatorForm>
             </div>

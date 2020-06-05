@@ -1,38 +1,11 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import SearchField from "./SearchField";
 import NotificationBadge from "./NotificationBadge";
 import AccountMenu from "./AccountMenu";
 import BadgeAccountMenuMobile from "./BadgeAccountMenuMobile";
-
-const useStyles = makeStyles(theme => ({
-    grow: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        display: 'none',
-        [theme.breakpoints.up('sm')]: {
-            display: 'block',
-        },
-    },
-    sectionDesktop: {
-        display: 'none',
-        [theme.breakpoints.up('md')]: {
-            display: 'flex',
-        },
-    },
-    sectionMobile: {
-        display: 'flex',
-        [theme.breakpoints.up('md')]: {
-            display: 'none',
-        },
-    },
-}));
+import {useStyles} from "../../utils/AppStyle";
 
 export default function TopAppBar() {
     const classes = useStyles();

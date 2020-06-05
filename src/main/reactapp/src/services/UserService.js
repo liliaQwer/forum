@@ -24,8 +24,8 @@ class UserService {
     sendMailForRecover(email) {
         return axios.post(RESTORE_API_URL, {email})
     }
-    updatePassword(token, password, confirmedPassword){
-        return axios.put(RESTORE_API_URL, {token, password, confirmedPassword})
+    updatePassword(token, password, confirmePassword){
+        return axios.put(RESTORE_API_URL, {token, password, confirmePassword})
     }
 
 }

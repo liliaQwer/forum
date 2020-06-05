@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from "react";
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Container} from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
-import {blueGrey} from "@material-ui/core/colors";
 import { useParams } from 'react-router-dom';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -14,19 +12,7 @@ import ThumbDownSharpIcon from '@material-ui/icons/ThumbDownSharp';
 import ThumbUpSharpIcon from '@material-ui/icons/ThumbUpSharp';
 import IconButton from '@material-ui/core/IconButton';
 import PostService from "../../services/PostService";
-
-const useStyles = makeStyles(theme => ({
-        avatar: {
-            backgroundColor: blueGrey[500],
-            width: theme.spacing(4),
-            height: theme.spacing(4),
-            textAlign: 'center'
-        },
-        alignRight: {
-            justifyContent: 'flex-end'
-        }
-    })
-);
+import {useStyles} from "../../utils/AppStyle";
 
 export default function PostContent(props){
     const classes = useStyles();

@@ -7,5 +7,7 @@ function MAX_LENGTH(maxLength) {
     return `Maximum ${maxLength} characters`;
 }
 
-export { MAX_LENGTH, REQUIRED_FIELD, EMAIL_NOT_VALID, PASSWORD_MISMATCH, USER_UNAUTHORIZED};
+const INTERNAL_ERROR = "Something went wrong...";
+
+export { MAX_LENGTH, REQUIRED_FIELD, EMAIL_NOT_VALID, PASSWORD_MISMATCH, USER_UNAUTHORIZED, INTERNAL_ERROR};
 
