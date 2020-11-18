@@ -48,7 +48,7 @@ export default function () {
 
     useEffect(() => {
         ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
-            console.log("checkPAsswords");
+            console.log("checkPAsswords value=" + value + "password=" + password);
             return value === password;
         });
     });

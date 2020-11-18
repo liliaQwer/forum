@@ -6,6 +6,7 @@ import NotificationBadge from "./NotificationBadge";
 import AccountMenu from "./AccountMenu";
 import BadgeAccountMenuMobile from "./BadgeAccountMenuMobile";
 import {useStyles} from "../../utils/AppStyle";
+import AddPostButton from "./AddPostButton";
 
 export default function TopAppBar() {
     const classes = useStyles();
@@ -14,14 +15,15 @@ export default function TopAppBar() {
         <div className={classes.grow}>
             <AppBar position="static">
                 <Toolbar>
-                    <SearchField />
-                    <div className={classes.grow} />
+                    <SearchField/>
+                    <div className={classes.grow}/>
                     <div className={classes.sectionDesktop}>
-                        <NotificationBadge />
-                        <AccountMenu />
+                        <AddPostButton/>
+                        <NotificationBadge/>
+                        <AccountMenu/>
                     </div>
                     <div className={classes.sectionMobile}>
-                        <BadgeAccountMenuMobile />
+                        <BadgeAccountMenuMobile/>
                     </div>
                 </Toolbar>
             </AppBar>

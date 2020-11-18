@@ -15,6 +15,9 @@ class UserService {
     setAuthenticatedToken(token) {
         localStorage.setItem('authenticationToken', token);
     }
+    getAuthenticatedToken() {
+        return localStorage.getItem('authenticationToken');
+    }
     isAuthenticated() {
         if (localStorage.getItem("authenticationToken")){
             return true;
@@ -24,8 +27,8 @@ class UserService {
     sendMailForRecover(email) {
         return axios.post(RESTORE_API_URL, {email})
     }
-    updatePassword(token, password, confirmePassword){
-        return axios.put(RESTORE_API_URL, {token, password, confirmePassword})
+    updatePassword(token, password, confirmPassword){
+        return axios.put(RESTORE_API_URL, {token, password, confirmPassword})
     }
 
 }

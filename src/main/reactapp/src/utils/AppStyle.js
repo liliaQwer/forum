@@ -56,6 +56,8 @@ const useStyles = makeStyles(theme => ({
         form: {
             width: '100%', // Fix IE 11 issue.
             marginTop: theme.spacing(1),
+            display: 'flex',
+            flexDirection: 'column',
         },
         submit: {
             margin: theme.spacing(3, 0, 2),
@@ -134,6 +136,16 @@ const useStyles = makeStyles(theme => ({
             [theme.breakpoints.up('md')]: {
                 width: 200,
             },
+        },
+        fullWidth: {
+            width: '100%',
+        },
+        halfWidth: {
+            width: '50%',
+        },
+        backdrop: {
+            zIndex: theme.zIndex.drawer + 1,
+            color: '#fff',
         }
     })
 );

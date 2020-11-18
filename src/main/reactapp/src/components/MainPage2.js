@@ -6,9 +6,10 @@ import TopAppBar from "./appbar/TopAppBar";
 import BottomAppBar from "./appbar/BottomAppBar";
 import PostListContent from "./postcontent/PostListContent";
 import { Route, Switch } from 'react-router-dom';
-import {POSTS, POSTS_API_URL} from "../utils/Url";
+import {ADD_NEW_POST, POSTS_API_URL} from "../utils/Url";
 import PostContent from "./postcontent/PostContent";
 import NotFound from "./NotFound";
+import AddPost from "./postcontent/AddPost";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -43,6 +44,7 @@ function MainPage2() {
         <div className={classes.overflow}>
             <TopAppBar/>
             <Switch>
+                <Route path={`${ADD_NEW_POST}`} exact component={AddPost} />
                 <Route path={`${POSTS_API_URL}`} exact component={PostListContent}/>
                 <Route path={`/`} exact component={PostListContent}/>
                 <Route path={`${POSTS_API_URL}/:postId`} component={PostContent}/>

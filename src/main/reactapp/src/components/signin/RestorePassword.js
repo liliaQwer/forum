@@ -9,10 +9,8 @@ import UserService from "../../services/UserService";
 import {Alert} from "@material-ui/lab";
 import {
     EMAIL_NOT_VALID,
-    INTERNAL_ERROR,
     MAX_LENGTH,
-    REQUIRED_FIELD,
-    USER_UNAUTHORIZED
+    REQUIRED_FIELD
 } from "../../utils/ErrorMessages";
 import { MAX_EMAIL_LENGTH} from "../../utils/ValidationRules";
 import {CONTINUE, ENTER_EMAIL_FOR_RECOVER, PASSWORD_RECOVER} from "../../utils/AppConstants";
