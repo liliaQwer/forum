@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 import {Alert} from "@material-ui/lab";
 import {TextValidator, ValidatorForm} from "react-material-ui-form-validator";
 import React, {useState, useEffect} from "react";
-import {useHistory} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {MAX_LENGTH, REQUIRED_FIELD} from "../../utils/ErrorMessages";
 import {
     MAX_DESCRIPTION_LENGTH,
@@ -12,7 +12,14 @@ import {
     MAX_CONTENT_LENGTH
 } from "../../utils/ValidationRules";
 import {POSTS} from "../../utils/Url";
-import {ADD, ANONYMOUS_USER, GO_TO_MAIN_PAGE, POST_ADD_CAPTION, POST_ADD_SUCCESS} from "../../utils/AppConstants";
+import {
+    ADD,
+    EDIT,
+    GO_TO_MAIN_PAGE,
+    POST_ADD_CAPTION,
+    POST_ADD_SUCCESS,
+    POST_EDIT_CAPTION, POST_EDIT_SUCCESS
+} from "../../utils/AppConstants";
 import {useStyles} from "../../utils/AppStyle";
 import ErrorService from "../../services/ErrorService";
 import FormControl from "@material-ui/core/FormControl";
@@ -34,10 +41,12 @@ export default function () {
     const [content, setContent] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [version, setVersion] = useState(0);
     const [serverError, setServerError] = useState("");
     const [serverErrorOn, setServerErrorOn] = useState(false);
     const [showLoading, setShowLoading] = useState(false);
     const [showAddConfirm, setShowAddConfirm] = useState(false);
+    const {postId} = useParams();
 
     const history = useHistory();
 
@@ -46,16 +55,59 @@ export default function () {
             .then(response => {
                 console.log(response.data);
                 const categoryArray = response.data.slice(1);//remove first element with the category "ALL"
-                setCategoryList(categoryArray.map((value,index)=>({id: index + 1, value: value})));
-                setCategory(1);
+                setCategoryList(categoryArray.map((value, index) => ({id: index + 1, value: value})));
             })
             .catch()
-    },[]);
+    }, []);
+
+    useEffect(() => {
+        if (categoryList.length !== 0) {
+            if (postId) {
+                getPostAndFillFields();
+            } else {
+                setCategory(1);
+            }
+        }
+    }, [categoryList])
+
+    const getPostAndFillFields = () => {
+        PostService.getPostById(postId)
+            .then(response => {
+                console.log(response.data);
+                setTitle(response.data.title);
+                setCategory(getCategoryIdByValue(response.data.category));
+                setDescription(response.data.description);
+                setContent(response.data.content);
+                setVersion(response.data.version);
+            })
+            .catch()
+    }
+
+    const getCategoryIdByValue = (value) => {
+        return categoryList.filter((element) => element.value === value)[0].id;
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log("onsubmit");
         setShowLoading(true);
+        if (postId) {
+            PostService.editPost(postId, title, category, description, content, version)
+                .then(
+                    response => {
+                        setShowLoading(false);
+                        setShowAddConfirm(true);
+                        getPostAndFillFields();
+                    }
+                )
+                .catch(
+                    error => {
+                        setShowLoading(false);
+                        ErrorService.showAppropriateError(error, setServerError);
+                        setServerErrorOn(true);
+                    });
+            return;
+        }
         PostService.addPost(title, category, description, content)
             .then(
                 response => {
@@ -111,8 +163,9 @@ export default function () {
     return (
         <Container className={classes.paper}>
             <Typography className={`${classes.caption} ${classes.italic}`} variant="h5" gutterBottom>
-                {POST_ADD_CAPTION}
+                {postId ? POST_EDIT_CAPTION : POST_ADD_CAPTION}
             </Typography>
+            <input type="hidden" value={version}/>
             <ValidatorForm
                 className={classes.form}
                 onSubmit={handleSubmit}
@@ -141,7 +194,7 @@ export default function () {
                         onChange={handleCategoryChange}
                         label="Category"
                     >
-                        {categoryList.map(({ id, value }) => (
+                        {categoryList.map(({id, value}) => (
                             <MenuItem key={id} value={id}>
                                 {value}
                             </MenuItem>
@@ -185,17 +238,19 @@ export default function () {
                     color="primary"
                     className={`${classes.submit} ${classes.halfWidth}`}
                 >
-                    {ADD}
+                    {postId ? EDIT : ADD}
                 </Button>
             </ValidatorForm>
-            <Link href="#" className={classes.greenColor}  onClick={handleGoToMainPage}>
+            <Link href="#" className={classes.greenColor} onClick={handleGoToMainPage}>
                 {GO_TO_MAIN_PAGE}
             </Link>
-            <Backdrop className={classes.backdrop} open={showLoading} onClick={()=>{setShowLoading(false)}}>
-                <CircularProgress color="inherit" />
+            <Backdrop className={classes.backdrop} open={showLoading} onClick={() => {
+                setShowLoading(false)
+            }}>
+                <CircularProgress color="inherit"/>
             </Backdrop>
             <Dialog onClose={handleDialogClose} aria-labelledby="simple-dialog-title" open={showAddConfirm}>
-                <DialogTitle id="simple-dialog-title">${POST_ADD_SUCCESS}</DialogTitle>
+                <DialogTitle id="simple-dialog-title">{postId ? POST_EDIT_SUCCESS : POST_ADD_SUCCESS}</DialogTitle>
             </Dialog>
         </Container>
     );

@@ -22,6 +22,13 @@ class PostService {
         }
         return axios.post(`${POSTS_API_URL}`, {title, category, description, content}, {headers: headers});
     }
+    editPost(id, title, category, description, content, version) {
+        const headers =  {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${UserService.getAuthenticatedToken()}`
+        }
+        return axios.put(`${POSTS_API_URL}/${id}`, {id, title, category, description, content, version}, {headers: headers});
+    }
 }
 
 export default new PostService();

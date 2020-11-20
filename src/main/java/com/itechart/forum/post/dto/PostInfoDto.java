@@ -25,4 +25,7 @@ public class PostInfoDto {
 
     private String createdBy;
 
+    private int version;
+
+
 }

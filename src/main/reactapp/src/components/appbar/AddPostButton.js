@@ -1,7 +1,7 @@
 import React from "react";
 import NewPost from "@material-ui/icons/AddCommentOutlined";
 import IconButton from "@material-ui/core/IconButton";
-import {ADD_NEW_POST} from "../../utils/Url";
+import {POST_API_URL} from "../../utils/Url";
 import {useHistory} from "react-router-dom";
 
 export default function AddPostButton() {
@@ -9,7 +9,7 @@ export default function AddPostButton() {
 
     const showAddPostPage = (event) => {
         event.preventDefault();
-        history.push(`${ADD_NEW_POST}`);
+        history.push(`${POST_API_URL}`);
     };
 
     return (

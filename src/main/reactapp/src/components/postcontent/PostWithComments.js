@@ -14,7 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import PostService from "../../services/PostService";
 import {useStyles} from "../../utils/AppStyle";
 
-export default function PostContent(props){
+export default function PostWithComments(props){
     const classes = useStyles();
     const { postId } = useParams();
     const [ post, setPost ] = useState({
