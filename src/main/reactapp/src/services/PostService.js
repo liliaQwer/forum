@@ -29,6 +29,16 @@ class PostService {
         }
         return axios.put(`${POSTS_API_URL}/${id}`, {id, title, category, description, content, version}, {headers: headers});
     }
+    deletePost(id) {
+        const config = {
+            headers:  {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${UserService.getAuthenticatedToken()}`
+            },
+            data: id
+        }
+        return axios.delete(`${POSTS_API_URL}`, config);
+    }
 }
 
 export default new PostService();

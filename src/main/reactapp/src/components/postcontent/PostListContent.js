@@ -10,8 +10,17 @@ import PostService from "../../services/PostService";
 import {Container} from "@material-ui/core";
 import { useHistory } from 'react-router-dom';
 import {POSTS_API_URL} from "../../utils/Url";
-import {POST_LIST_CAPTION} from "../../utils/AppConstants";
+import {CANCEL, DELETE, DELETE_COMFIRM, POST_DELETE_SUCCESS, POST_LIST_CAPTION} from "../../utils/AppConstants";
 import {useStyles} from "../../utils/AppStyle";
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from "@material-ui/core/IconButton";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import Button from "@material-ui/core/Button";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
+import {Alert} from "@material-ui/lab";
+import ErrorService from "../../services/ErrorService";
 
 export default function PostListContent(props) {
     const classes = useStyles();
@@ -20,17 +29,30 @@ export default function PostListContent(props) {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [posts, setPosts] = useState([]);
     const [totalElements, setTotalElements] = useState(0);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [postIdsForDelete, setPostIdsForDelete] = useState([]);
+    const [serverErrorOn, setServerErrorOn] = useState(false);
+    const [serverError, setServerError] = useState();
+    const [infoMessageOn, setInfoMessageOn] = useState(false);
+    const [infoMessage, setInfoMessage] = useState();
+
     const history = useHistory();
 
     useEffect(() => {
+        getPostList(page, rowsPerPage);
+    }, [page, rowsPerPage]);
+
+    const getPostList = (page, rowsPerPage) => {
         PostService.getPostList(page, rowsPerPage)
             .then(response => {
                 setPosts(response.data.content);
                 setTotalElements(response.data.totalElements);
             })
-            .catch()
-    }, [page, rowsPerPage]);
-
+            .catch(error => {
+                ErrorService.showAppropriateError(error, setServerError);
+                setServerErrorOn(true);
+            });
+    }
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -45,6 +67,41 @@ export default function PostListContent(props) {
         console.log(postId);
         history.push(`${POSTS_API_URL}/${postId}`)
     };
+
+    const handleDeletePost = (e, postId) => {
+        setOpenDeleteDialog(true);
+        setPostIdsForDelete([postId]);
+    }
+
+    const handleDeleteConfirm = () => {
+        PostService.deletePost(postIdsForDelete)
+            .then(response => {
+                if (page !== 0){
+                    setPage(0);
+                } else {
+                    getPostList(0, rowsPerPage);
+                }
+                setPostIdsForDelete([]);
+                setInfoMessage(POST_DELETE_SUCCESS);
+                setInfoMessageOn(true);
+            })
+            .then(() => {
+                setTimeout(() => setInfoMessageOn(false), 5000);
+            })
+            .catch(error => {
+                ErrorService.showAppropriateError(error, setServerError);
+                setServerErrorOn(true);
+            })
+            .finally(() => {
+                setOpenDeleteDialog(false);
+                setTimeout(() => setServerErrorOn(false), 5000);
+            });
+    }
+
+    const handleDeleteCancel = () => {
+        setOpenDeleteDialog(false);
+        setPostIdsForDelete("");
+    }
 
     return (
         <Container className={classes.paper}>
@@ -66,10 +123,25 @@ export default function PostListContent(props) {
                                           className={`${classes.lessGrow} ${classes.alignRight} ${classes.flex} ${classes.italic}`}/>
                             <ListItemText secondary={new Date(createdDate).toDateString()}
                                           className={`${classes.lessGrow} ${classes.alignRight} ${classes.flex} ${classes.blueColor}`}/>
+                            <ListItemSecondaryAction>
+                                <IconButton edge="end" aria-label="delete" onClick={(e) => handleDeletePost(e, id)}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </ListItemSecondaryAction>
                         </ListItem>
                     </React.Fragment>
                 ))}
             </List>
+            {serverErrorOn &&
+            <Alert severity="error">
+                {serverError}
+            </Alert>
+            }
+            {infoMessageOn &&
+            <Alert severity="success">
+                {infoMessage}
+            </Alert>
+            }
             <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
@@ -80,6 +152,21 @@ export default function PostListContent(props) {
                 onChangeRowsPerPage={handleChangeRowsPerPage}
                 labelRowsPerPage={'Posts per page:'}
             />
+            <Dialog
+                open={openDeleteDialog}
+                onClose={handleDeleteCancel}
+                aria-labelledby="alert-dialog-title"
+            >
+                <DialogTitle id="alert-dialog-title">{DELETE_COMFIRM}</DialogTitle>
+                <DialogActions>
+                    <Button onClick={handleDeleteConfirm} color="primary">
+                        {DELETE}
+                    </Button>
+                    <Button onClick={handleDeleteCancel} color="primary" autoFocus>
+                        {CANCEL}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     );
 }
