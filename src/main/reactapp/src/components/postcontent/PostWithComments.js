@@ -3,7 +3,7 @@ import {Container} from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
-import { useParams } from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -13,24 +13,138 @@ import ThumbUpSharpIcon from '@material-ui/icons/ThumbUpSharp';
 import IconButton from '@material-ui/core/IconButton';
 import PostService from "../../services/PostService";
 import {useStyles} from "../../utils/AppStyle";
+import List from "@material-ui/core/List";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItem from "@material-ui/core/ListItem";
+import {
+    ADD,
+    CANCEL,
+    COMMENT_ADD_CAPTION, COMMENT_ADD_SUCCESS, COMMENT_DELETE_SUCCESS,
+    DELETE, DELETE_COMMENT_CONFIRM
+} from "../../utils/AppConstants";
+import ChatIcon from '@material-ui/icons/Chat';
+import Tooltip from "@material-ui/core/Tooltip";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import ErrorService from "../../services/ErrorService";
+import {Alert} from "@material-ui/lab";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import DeleteIcon from "@material-ui/icons/Delete";
+import InfoDialog from "../utility/InfoDialog";
 
-export default function PostWithComments(props){
+export default function PostWithComments(props) {
     const classes = useStyles();
-    const { postId } = useParams();
-    const [ post, setPost ] = useState({
+    const {postId} = useParams();
+    const [post, setPost] = useState({
         title: '',
         createdDate: "",
         content: ""
     });
-    
+    const [comments, setComments] = useState([]);
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [totalElements, setTotalElements] = useState(0);
+    const [openAddCommentDialog, setOpenAddCommentDialog] = useState(false);
+    const [openDeleteCommentDialog, setOpenDeleteCommentDialog] = useState(false);
+    const [commentToAdd, setCommentToAdd] = useState("");
+    const [commentIdForDelete, setCommentIdForDelete] = useState("");
+    const [serverErrorOn, setServerErrorOn] = useState(false);
+    const [serverError, setServerError] = useState();
+    const [infoMessageOn, setInfoMessageOn] = useState(false);
+    const [infoMessage, setInfoMessage] = useState();
+    const italicFontStyle = {
+        fontStyle: 'italic'
+    }
+
     useEffect(() => {
         PostService.getPostById(postId)
             .then(response => {
                 console.log(response.data);
                 setPost(response.data);
+                return PostService.getPostComments(postId, page, rowsPerPage);
+            })
+            .then((response) => {
+                console.log(response.data);
+                setComments(response.data.content);
             })
             .catch()
     }, []);
+
+    const handleAddCommentClick = () => {
+        setOpenAddCommentDialog(true);
+    }
+
+    const handleAddCommentConfirm = () => {
+        PostService.addComment(postId, commentToAdd)
+            .then(response => {
+                // if (page !== 0){
+                //     setPage(0);
+                // } else {
+                setCommentToAdd("");
+                setOpenAddCommentDialog(false);
+                return PostService.getPostComments(postId, page, rowsPerPage);
+                // }
+                // setPostIdsForDelete([]);
+                setInfoMessage(COMMENT_ADD_SUCCESS);
+                setInfoMessageOn(true);
+                setTimeout(() => setInfoMessageOn(false), 3000);
+            })
+            .then((response) => {
+                console.log(response.data);
+                setComments(response.data.content);
+            })
+            .catch(error => {
+                ErrorService.showAppropriateError(error, setServerError);
+                setServerErrorOn(true);
+                setTimeout(() => setServerErrorOn(false), 3000);
+            })
+    }
+
+    const handleAddCommentCancel = () => {
+        setOpenAddCommentDialog(false);
+        setCommentToAdd("");
+    }
+
+    const handleCommentToAddChange = (event) => {
+        setCommentToAdd(event.target.value);
+    }
+
+    const handleDeleteCommentClick = (event, commentId) => {
+        setOpenDeleteCommentDialog(true);
+        setCommentIdForDelete(commentId);
+    }
+
+    const handleDeleteCommentConfirm = () => {
+        PostService.deleteComment(postId, commentIdForDelete)
+            .then(response => {
+                // if (page !== 0){
+                //     setPage(0);
+                // } else {
+                //     getPostList(0, rowsPerPage);
+                // }
+                setCommentIdForDelete("");
+                setInfoMessage(COMMENT_DELETE_SUCCESS);
+                setInfoMessageOn(true);
+                setTimeout(() => setInfoMessageOn(false), 3000);
+            })
+            .catch(error => {
+                ErrorService.showAppropriateError(error, setServerError);
+                setServerErrorOn(true);
+                setTimeout(() => setServerErrorOn(false), 3000);
+            })
+            .finally(() => {
+                setOpenDeleteCommentDialog(false);
+            });
+    }
+
+    const handleDeleteCommentCancel = () => {
+        setOpenDeleteCommentDialog(false);
+        setCommentIdForDelete("");
+    }
+
     return (
         <Container>
             <Card className={classes.root}>
@@ -49,15 +163,93 @@ export default function PostWithComments(props){
                     </Typography>
                 </CardContent>
                 <Divider/>
-                <CardActions disableSpacing className={classes.alignRight}>
-                    <IconButton aria-label="add to favorites">
-                        <ThumbUpSharpIcon  color="primary"/>
-                    </IconButton>
-                    <IconButton aria-label="share">
-                        <ThumbDownSharpIcon color="secondary"/>
-                    </IconButton>
+                <List className={classes.root}>
+                    {comments.map(({id, content, likesCount, dislikesCount, createdDate, createdBy}) => (
+                        <React.Fragment key={id}>
+                            <ListItem alignItems="center">
+                                <ListItemText
+                                    primary={createdBy}
+                                    secondary={content}
+                                    className={classes.flexGrow1}
+                                />
+                                <ListItemText
+                                    secondary={createdDate}
+                                    className={`${classes.noFlexShrink} ${classes.noFlexGrow}`}
+                                    secondaryTypographyProps={{ style: italicFontStyle }}
+                                />
+                                <ListItemIcon>
+                                    <IconButton aria-label="add to favorites">
+                                        <ThumbUpSharpIcon color="primary"/>
+                                    </IconButton>
+                                </ListItemIcon>
+                                <ListItemIcon>
+                                    <IconButton aria-label="share">
+                                        <ThumbDownSharpIcon color="secondary"/>
+                                    </IconButton>
+                                </ListItemIcon>
+                                <ListItemIcon>
+                                    <IconButton edge="end" aria-label="delete" onClick={(e) => handleDeleteCommentClick(e, id)}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </ListItemIcon>
+                            </ListItem>
+                            <Divider variant="inset" component="li"/>
+                        </React.Fragment>
+                    ))}
+                </List>
+                <CardActions disableSpacing className={classes.alignRight} onClick={handleAddCommentClick}>
+                    <Tooltip title="Add a comment">
+                        <IconButton>
+                            <ChatIcon color="primary"/>
+                        </IconButton>
+                    </Tooltip>
                 </CardActions>
             </Card>
+            {serverErrorOn &&
+            <Alert severity="error">
+                {serverError}
+            </Alert>
+            }
+            {infoMessageOn &&
+            <Alert severity="success">
+                {infoMessage}
+            </Alert>
+            }
+            <Dialog
+                open={openAddCommentDialog}
+                onClose={handleAddCommentCancel}
+                aria-labelledby="alert-dialog-title"
+            >
+                <DialogTitle id="alert-dialog-title">{COMMENT_ADD_CAPTION}</DialogTitle>
+                <TextField
+                    autoFocus
+                    variant="outlined"
+                    margin="normal"
+                    multiline
+                    rows={4}
+                    id="commentToAdd"
+                    value={commentToAdd}
+                    onChange={handleCommentToAddChange}
+                    label="Your comment"
+
+                />
+                <DialogActions>
+                    <Button onClick={handleAddCommentConfirm} color="primary">
+                        {ADD}
+                    </Button>
+                    <Button onClick={handleAddCommentCancel} color="primary">
+                        {CANCEL}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <InfoDialog
+                title={DELETE_COMMENT_CONFIRM}
+                confirmText={DELETE}
+                cancelText={CANCEL}
+                openDialog={openDeleteCommentDialog}
+                handleCancel={handleDeleteCommentCancel}
+                handleConfirm={handleDeleteCommentConfirm}
+                />
         </Container>
     );
 }

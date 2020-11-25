@@ -10,17 +10,20 @@ import PostService from "../../services/PostService";
 import {Container} from "@material-ui/core";
 import { useHistory } from 'react-router-dom';
 import {POSTS_API_URL} from "../../utils/Url";
-import {CANCEL, DELETE, DELETE_COMFIRM, POST_DELETE_SUCCESS, POST_LIST_CAPTION} from "../../utils/AppConstants";
+import {
+    CANCEL,
+    DELETE,
+    DELETE_POST_CONFIRM,
+    POST_DELETE_SUCCESS,
+    POST_LIST_CAPTION
+} from "../../utils/AppConstants";
 import {useStyles} from "../../utils/AppStyle";
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import Button from "@material-ui/core/Button";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
 import {Alert} from "@material-ui/lab";
 import ErrorService from "../../services/ErrorService";
+import InfoDialog from "../utility/InfoDialog";
 
 export default function PostListContent(props) {
     const classes = useStyles();
@@ -84,23 +87,21 @@ export default function PostListContent(props) {
                 setPostIdsForDelete([]);
                 setInfoMessage(POST_DELETE_SUCCESS);
                 setInfoMessageOn(true);
-            })
-            .then(() => {
-                setTimeout(() => setInfoMessageOn(false), 5000);
+                setTimeout(() => setInfoMessageOn(false), 3000);
             })
             .catch(error => {
                 ErrorService.showAppropriateError(error, setServerError);
                 setServerErrorOn(true);
+                setTimeout(() => setServerErrorOn(false), 3000);
             })
             .finally(() => {
                 setOpenDeleteDialog(false);
-                setTimeout(() => setServerErrorOn(false), 5000);
             });
     }
 
     const handleDeleteCancel = () => {
         setOpenDeleteDialog(false);
-        setPostIdsForDelete("");
+        setPostIdsForDelete([]);
     }
 
     return (
@@ -152,21 +153,14 @@ export default function PostListContent(props) {
                 onChangeRowsPerPage={handleChangeRowsPerPage}
                 labelRowsPerPage={'Posts per page:'}
             />
-            <Dialog
-                open={openDeleteDialog}
-                onClose={handleDeleteCancel}
-                aria-labelledby="alert-dialog-title"
-            >
-                <DialogTitle id="alert-dialog-title">{DELETE_COMFIRM}</DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleDeleteConfirm} color="primary">
-                        {DELETE}
-                    </Button>
-                    <Button onClick={handleDeleteCancel} color="primary" autoFocus>
-                        {CANCEL}
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <InfoDialog
+                title={DELETE_POST_CONFIRM}
+                confirmText={DELETE}
+                cancelText={CANCEL}
+                openDialog={openDeleteDialog}
+                handleCancel={handleDeleteCancel}
+                handleConfirm={handleDeleteConfirm}
+            />
         </Container>
     );
 }

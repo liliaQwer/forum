@@ -148,6 +148,18 @@ const useStyles = makeStyles(theme => ({
         backdrop: {
             zIndex: theme.zIndex.drawer + 1,
             color: '#fff',
+        },
+        marginAuto: {
+            margin: 'auto'
+        },
+        noFlexShrink: {
+            flexShrink: '0'
+        },
+        noFlexGrow: {
+            flexGrow: '0'
+        },
+        flexGrow1: {
+            flexGrow: '1'
         }
     })
 );

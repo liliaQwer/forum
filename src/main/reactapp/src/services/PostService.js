@@ -39,6 +39,29 @@ class PostService {
         }
         return axios.delete(`${POSTS_API_URL}`, config);
     }
+    getPostComments(postId, page, size) {
+        const config = {
+            params: {page, size}
+        };
+        return axios.get(`${POSTS_API_URL}/${postId}/comments`, config);
+    }
+    addComment(postId, comment) {
+        const headers =  {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${UserService.getAuthenticatedToken()}`
+        }
+        return axios.post(`${POSTS_API_URL}/${postId}/comments`, {content: comment, postId: postId}, {headers: headers});
+    }
+    deleteComment(postId, commentId) {
+        const config = {
+            headers:  {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${UserService.getAuthenticatedToken()}`
+            },
+            data: commentId
+        }
+        return axios.delete(`${POSTS_API_URL}/${postId}/comments`, config);
+    }
 }
 
 export default new PostService();

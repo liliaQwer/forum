@@ -1,29 +1,25 @@
 import React from "react";
-import ListItem from "@material-ui/core/ListItem";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
 
 export default function (props) {
-    const classes = useStyles();
-    const { onClose, selectedValue, open } = props;
-
-    const handleClose = () => {
-        onClose(selectedValue);
-    };
-
-    const handleListItemClick = (value) => {
-        onClose(value);
-    };
-
     return (
-        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-            <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
+        <Dialog
+            open={props.openDialog}
+            onClose={props.handleCancel}
+            aria-labelledby="alert-dialog-title"
+        >
+            <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
+            <DialogActions>
+                <Button onClick={props.handleConfirm} color="primary">
+                    {props.confirmText}
+                </Button>
+                <Button onClick={props.handleCancel} color="primary" autoFocus>
+                    {props.cancelText}
+                </Button>
+            </DialogActions>
         </Dialog>
     );
 }
-
-SimpleDialog.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-    selectedValue: PropTypes.string.isRequired,
-};
