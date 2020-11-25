@@ -62,6 +62,12 @@ class PostService {
         }
         return axios.delete(`${POSTS_API_URL}/${postId}/comments`, config);
     }
+    addCommentLike(postId, commentId) {
+        return axios.post(`${POSTS_API_URL}/${postId}/comments/${commentId}/like`);
+    }
+    addCommentDislike(postId, commentId) {
+        return axios.post(`${POSTS_API_URL}/${postId}/comments/${commentId}/dislike`);
+    }
 }
 
 export default new PostService();

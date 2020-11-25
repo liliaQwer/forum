@@ -160,6 +160,15 @@ const useStyles = makeStyles(theme => ({
         },
         flexGrow1: {
             flexGrow: '1'
+        },
+        marginLeft15: {
+            marginLeft: '15'
+        },
+        marginRight15: {
+            marginRight: '15'
+        },
+        minWidth45: {
+            minWidth: '45px'
         }
     })
 );

@@ -34,6 +34,7 @@ import {Alert} from "@material-ui/lab";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DeleteIcon from "@material-ui/icons/Delete";
 import InfoDialog from "../utility/InfoDialog";
+import DialogContent from "@material-ui/core/DialogContent";
 
 export default function PostWithComments(props) {
     const classes = useStyles();
@@ -57,6 +58,14 @@ export default function PostWithComments(props) {
     const [infoMessage, setInfoMessage] = useState();
     const italicFontStyle = {
         fontStyle: 'italic'
+    }
+    const likeStyle = {
+        fontSize: '12px',
+        color: 'blue'
+    }
+    const dislikeStyle = {
+        fontSize: '12px',
+        color: 'red'
     }
 
     useEffect(() => {
@@ -145,6 +154,26 @@ export default function PostWithComments(props) {
         setCommentIdForDelete("");
     }
 
+    const handleLikeClick = (event, commentId) => {
+        PostService.addCommentLike(postId, commentId)
+            .then(response => {
+                return PostService.getPostComments(postId, page, rowsPerPage);
+            })
+            .then((response) => {
+                setComments(response.data.content);
+            });
+    }
+
+    const handleDislikeClick = (event, commentId) => {
+        PostService.addCommentDislike(postId, commentId)
+            .then(response => {
+                return PostService.getPostComments(postId, page, rowsPerPage);
+            })
+            .then((response) => {
+                setComments(response.data.content);
+            });
+    }
+
     return (
         <Container>
             <Card className={classes.root}>
@@ -177,16 +206,26 @@ export default function PostWithComments(props) {
                                     className={`${classes.noFlexShrink} ${classes.noFlexGrow}`}
                                     secondaryTypographyProps={{ style: italicFontStyle }}
                                 />
-                                <ListItemIcon>
+                                <ListItemIcon className={classes.minWidth45} onClick={e => handleLikeClick(e, id)}>
                                     <IconButton aria-label="add to favorites">
-                                        <ThumbUpSharpIcon color="primary"/>
+                                        <ThumbUpSharpIcon fontSize="small" color="primary"/>
                                     </IconButton>
                                 </ListItemIcon>
-                                <ListItemIcon>
+                                <ListItemText
+                                    secondary={likesCount}
+                                    className={`${classes.noFlexShrink} ${classes.noFlexGrow}`}
+                                    secondaryTypographyProps={{ style: likeStyle }}
+                                />
+                                <ListItemIcon className={classes.minWidth45} onClick={e => handleDislikeClick(e, id)}>
                                     <IconButton aria-label="share">
-                                        <ThumbDownSharpIcon color="secondary"/>
+                                        <ThumbDownSharpIcon fontSize="small" color="secondary"/>
                                     </IconButton>
                                 </ListItemIcon>
+                                <ListItemText
+                                    secondary={dislikesCount}
+                                    className={`${classes.noFlexShrink} ${classes.noFlexGrow}`}
+                                    secondaryTypographyProps={{ style: dislikeStyle }}
+                                />
                                 <ListItemIcon>
                                     <IconButton edge="end" aria-label="delete" onClick={(e) => handleDeleteCommentClick(e, id)}>
                                         <DeleteIcon />
@@ -221,18 +260,19 @@ export default function PostWithComments(props) {
                 aria-labelledby="alert-dialog-title"
             >
                 <DialogTitle id="alert-dialog-title">{COMMENT_ADD_CAPTION}</DialogTitle>
+                <DialogContent>
                 <TextField
                     autoFocus
                     variant="outlined"
-                    margin="normal"
                     multiline
                     rows={4}
                     id="commentToAdd"
                     value={commentToAdd}
                     onChange={handleCommentToAddChange}
                     label="Your comment"
-
+                    className={classes.flex}
                 />
+                </DialogContent>
                 <DialogActions>
                     <Button onClick={handleAddCommentConfirm} color="primary">
                         {ADD}
@@ -241,6 +281,7 @@ export default function PostWithComments(props) {
                         {CANCEL}
                     </Button>
                 </DialogActions>
+
             </Dialog>
             <InfoDialog
                 title={DELETE_COMMENT_CONFIRM}

@@ -56,7 +56,7 @@ public class CommentController {
 
     @GetMapping(path = "/posts/{postId}/comments")
     public Page<CommentInfoDto> getComments(@PathVariable Integer postId,
-                                            @PageableDefault(size = 5, sort = "createdBy", direction = Sort.Direction.DESC)Pageable pageable){
+                                            @PageableDefault(size = 5, sort = {"createdBy","id"}, direction = Sort.Direction.DESC)Pageable pageable){
         return commentService.get(postId, pageable);
     }
 }
