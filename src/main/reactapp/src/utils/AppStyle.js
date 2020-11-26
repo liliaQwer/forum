@@ -162,10 +162,13 @@ const useStyles = makeStyles(theme => ({
             flexGrow: '1'
         },
         marginLeft15: {
-            marginLeft: '15'
+            marginLeft: '15px'
         },
         marginRight15: {
-            marginRight: '15'
+            marginRight: '15px'
+        },
+        marginRight25: {
+            marginRight: '25px'
         },
         minWidth45: {
             minWidth: '45px'
@@ -173,4 +176,4 @@ const useStyles = makeStyles(theme => ({
     })
 );
 
-export { useStyles }
+export {useStyles}
