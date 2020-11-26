@@ -24,6 +24,8 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import {Alert} from "@material-ui/lab";
 import ErrorService from "../../services/ErrorService";
 import InfoDialog from "../utility/InfoDialog";
+import UserService from "../../services/UserService";
+import AddPostButton from "../appbar/AddPostButton";
 
 export default function PostListContent(props) {
     const classes = useStyles();
@@ -110,7 +112,7 @@ export default function PostListContent(props) {
                 {POST_LIST_CAPTION}
             </Typography>
             <List className={classes.list}>
-                {posts.map(({id, title, description,createdDate, category}) => (
+                {posts.map(({id, title, description,createdDate, category, createdBy}) => (
                     <React.Fragment key={id}>
                         <ListItem button onClick={(e) => handlePostClick(e, id)}>
                             <ListItemAvatar>
@@ -124,11 +126,12 @@ export default function PostListContent(props) {
                                           className={`${classes.lessGrow} ${classes.alignRight} ${classes.flex} ${classes.italic}`}/>
                             <ListItemText secondary={new Date(createdDate).toDateString()}
                                           className={`${classes.lessGrow} ${classes.alignRight} ${classes.flex} ${classes.blueColor}`}/>
-                            <ListItemSecondaryAction>
+                            {createdBy === UserService.getUserLogin() && UserService.isValidAuthentification() && <ListItemSecondaryAction>
                                 <IconButton edge="end" aria-label="delete" onClick={(e) => handleDeletePost(e, id)}>
-                                    <DeleteIcon />
+                                    <DeleteIcon/>
                                 </IconButton>
                             </ListItemSecondaryAction>
+                            }
                         </ListItem>
                     </React.Fragment>
                 ))}

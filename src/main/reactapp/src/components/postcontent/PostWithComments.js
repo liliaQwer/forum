@@ -35,6 +35,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DeleteIcon from "@material-ui/icons/Delete";
 import InfoDialog from "../utility/InfoDialog";
 import DialogContent from "@material-ui/core/DialogContent";
+import UserService from "../../services/UserService";
 
 export default function PostWithComments(props) {
     const classes = useStyles();
@@ -226,16 +227,20 @@ export default function PostWithComments(props) {
                                     className={`${classes.noFlexShrink} ${classes.noFlexGrow}`}
                                     secondaryTypographyProps={{ style: dislikeStyle }}
                                 />
+                                {createdBy === UserService.getUserLogin() && UserService.isValidAuthentification() &&
                                 <ListItemIcon>
-                                    <IconButton edge="end" aria-label="delete" onClick={(e) => handleDeleteCommentClick(e, id)}>
-                                        <DeleteIcon />
+                                    <IconButton edge="end" aria-label="delete"
+                                                onClick={(e) => handleDeleteCommentClick(e, id)}>
+                                        <DeleteIcon/>
                                     </IconButton>
                                 </ListItemIcon>
+                                }
                             </ListItem>
                             <Divider variant="inset" component="li"/>
                         </React.Fragment>
                     ))}
                 </List>
+                {UserService.isValidAuthentification() &&
                 <CardActions disableSpacing className={classes.alignRight} onClick={handleAddCommentClick}>
                     <Tooltip title="Add a comment">
                         <IconButton>
@@ -243,6 +248,7 @@ export default function PostWithComments(props) {
                         </IconButton>
                     </Tooltip>
                 </CardActions>
+                }
             </Card>
             {serverErrorOn &&
             <Alert severity="error">

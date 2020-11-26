@@ -54,7 +54,7 @@ export default function AccountMenu(props) {
                 onClose={handleMenuClose}
                 autoFocus={false}
             >
-                {UserService.isAuthenticated() ? (
+                {UserService.isValidAuthentification() ? (
                     <MenuList variant='menu'>
                         <MenuItem onClick={handleSignInMenuOpen}>{PROFILE}</MenuItem>
                         <MenuItem onClick={handleSignOutMenuOpen}>{SIGN_OUT}</MenuItem>

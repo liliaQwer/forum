@@ -30,7 +30,32 @@ class UserService {
     updatePassword(token, password, confirmPassword){
         return axios.put(RESTORE_API_URL, {token, password, confirmPassword})
     }
-
+    getUserRole(){
+        try {
+            const claim = JSON.parse(atob(this.getAuthenticatedToken().split('.')[1]));
+            return claim.role;
+        } catch (e) {
+            return null;
+        }
+    }
+    getUserLogin(){
+        try {
+            const claim = JSON.parse(atob(this.getAuthenticatedToken().split('.')[1]));
+            return claim.sub;
+        } catch (e) {
+            return null;
+        }
+    }
+    isValidAuthentification() {
+        try {
+            const claim = JSON.parse(atob(this.getAuthenticatedToken().split('.')[1]));
+            if (new Date().getTime()/1000 < claim.exp) {
+                return true;
+            }
+        } catch (e) {
+        }
+        return false;
+    }
 }
 
 export default new UserService();

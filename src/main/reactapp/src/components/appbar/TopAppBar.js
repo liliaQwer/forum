@@ -7,6 +7,7 @@ import AccountMenu from "./AccountMenu";
 import BadgeAccountMenuMobile from "./BadgeAccountMenuMobile";
 import {useStyles} from "../../utils/AppStyle";
 import AddPostButton from "./AddPostButton";
+import UserService from "../../services/UserService";
 
 export default function TopAppBar() {
     const classes = useStyles();
@@ -18,8 +19,8 @@ export default function TopAppBar() {
                     <SearchField/>
                     <div className={classes.grow}/>
                     <div className={classes.sectionDesktop}>
-                        <AddPostButton/>
-                        <NotificationBadge/>
+                        {UserService.isValidAuthentification() && <AddPostButton/>}
+                        {UserService.isValidAuthentification() && <NotificationBadge/>}
                         <AccountMenu/>
                     </div>
                     <div className={classes.sectionMobile}>
