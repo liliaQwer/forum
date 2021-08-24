@@ -99,9 +99,16 @@ public class PostServiceImpl implements PostService {
             pageable = PageRequest.of(pageable.getPageNumber(), defaultPageSize, Sort.Direction.DESC, "createdDate");
         }
         Page<Post> postDto;
+        boolean isEmptyContentToFind = filter.getContent() == null || filter.getContent().isEmpty();
         if (filter.getCategory() != null && filter.getCategory() != CategoryType.All) {
-            postDto = postRepository.findByCategory( filter.getCategory(), pageable);
-        }else{
+            if (isEmptyContentToFind) {
+                postDto = postRepository.findByCategory(filter.getCategory(), pageable);
+            } else {
+                postDto = postRepository.findByCategoryAndContentBodyContaining(filter.getCategory(), filter.getContent(), pageable);
+            }
+        } else if (!isEmptyContentToFind) {
+            postDto = postRepository.findByContentBodyContaining(filter.getContent(), pageable);
+        } else {
             postDto = postRepository.findAll( pageable);
         }
         Page<PostInfoDto> postInfoDto = postDto.map((post)-> modelMapper.map(post, PostInfoDto.class));

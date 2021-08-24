@@ -12,7 +12,6 @@ import ThumbDownSharpIcon from '@material-ui/icons/ThumbDownSharp';
 import ThumbUpSharpIcon from '@material-ui/icons/ThumbUpSharp';
 import IconButton from '@material-ui/core/IconButton';
 import PostService from "../../services/PostService";
-import {useStyles} from "../../utils/AppStyle";
 import List from "@material-ui/core/List";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
@@ -37,6 +36,7 @@ import InfoDialog from "../utility/InfoDialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import UserService from "../../services/UserService";
 import Link from "@material-ui/core/Link";
+import {useStyles} from "../../utils/AppStyle";
 
 export default function PostWithComments(props) {
     const classes = useStyles();
@@ -221,7 +221,7 @@ export default function PostWithComments(props) {
                     </Typography>
                 </CardContent>
                 <Divider/>
-                <List className={classes.root}>
+                <List className={classes.alignRight}>
                     {comments.map(({id, content, likesCount, dislikesCount, createdDate, createdBy}) => (
                         <React.Fragment key={id}>
                             <ListItem alignItems="center">

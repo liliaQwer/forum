@@ -3,9 +3,9 @@ import {CATEGORY_LIST, POSTS_API_URL} from "../utils/Url";
 import UserService from "./UserService";
 
 class PostService {
-    getPostList(page, size) {
+    getPostList(page, size, category, content) {
         const config = {
-            params: {page, size}
+            params: {page, size, category, content}
         };
         return axios.get(`${POSTS_API_URL}`, config );
     }

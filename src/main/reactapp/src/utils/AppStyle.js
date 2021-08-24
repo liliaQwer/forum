@@ -1,6 +1,5 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {blueGrey} from "@material-ui/core/colors";
-import {fade} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
         avatar: {
@@ -107,10 +106,7 @@ const useStyles = makeStyles(theme => ({
         search: {
             position: 'relative',
             borderRadius: theme.shape.borderRadius,
-            backgroundColor: fade(theme.palette.common.white, 0.15),
-            '&:hover': {
-                backgroundColor: fade(theme.palette.common.white, 0.25),
-            },
+            backgroundColor: 'rgb(160 168 179 / 15%)',
             marginRight: theme.spacing(2),
             marginLeft: 0,
             width: '100%',
@@ -140,38 +136,44 @@ const useStyles = makeStyles(theme => ({
             },
         },
         fullWidth: {
-            width: '100%',
+            width: '100% !important',
         },
         halfWidth: {
-            width: '50%',
+            width: '50% !important',
         },
         backdrop: {
             zIndex: theme.zIndex.drawer + 1,
             color: '#fff',
         },
         marginAuto: {
-            margin: 'auto'
+            margin: 'auto !important'
         },
         noFlexShrink: {
             flexShrink: '0'
         },
         noFlexGrow: {
-            flexGrow: '0'
+            flexGrow: '0 !important'
         },
         flexGrow1: {
-            flexGrow: '1'
+            flexGrow: '1 !important'
         },
         marginLeft15: {
-            marginLeft: '15px'
+            marginLeft: '15px !important'
         },
         marginRight15: {
-            marginRight: '15px'
+            marginRight: '15px !important'
+        },
+        marginTop15: {
+            marginTop: '15px !important'
         },
         marginRight25: {
-            marginRight: '25px'
+            marginRight: '25px !important'
         },
         minWidth45: {
-            minWidth: '45px'
+            minWidth: '45px !important'
+        },
+        floatRight: {
+            float: 'right !important'
         }
     })
 );

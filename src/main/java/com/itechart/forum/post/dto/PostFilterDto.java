@@ -6,4 +6,5 @@ import lombok.Data;
 @Data
 public class PostFilterDto {
     private CategoryType category;
+    private String content;
 }

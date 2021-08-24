@@ -17,7 +17,6 @@ import {
     POST_DELETE_SUCCESS,
     POST_LIST_CAPTION
 } from "../../utils/AppConstants";
-import {useStyles} from "../../utils/AppStyle";
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
@@ -25,7 +24,13 @@ import {Alert} from "@material-ui/lab";
 import ErrorService from "../../services/ErrorService";
 import InfoDialog from "../utility/InfoDialog";
 import UserService from "../../services/UserService";
-import AddPostButton from "../appbar/AddPostButton";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
+import SearchField from "../appbar/SearchField";
+import {useStyles} from "../../utils/AppStyle";
 
 export default function PostListContent(props) {
     const classes = useStyles();
@@ -40,15 +45,35 @@ export default function PostListContent(props) {
     const [serverError, setServerError] = useState();
     const [infoMessageOn, setInfoMessageOn] = useState(false);
     const [infoMessage, setInfoMessage] = useState();
-
+    const [category, setCategory] = useState(0);
+    const [categoryList, setCategoryList] = useState([]);
+    const [contentToFind, setContentToFind] = useState('');
     const history = useHistory();
 
     useEffect(() => {
-        getPostList(page, rowsPerPage);
-    }, [page, rowsPerPage]);
+        PostService.getCategoryList()
+            .then(response => {
+                console.log(response.data);
+                const categoryArray = response.data;
+                setCategoryList(categoryArray.map((value, index) => ({id: index, value: value})));
+                console.log(categoryArray.map((value, index) => ({id: index, value: value})));
+                setCategory(0);
+            })
+            .catch()
+    }, []);
 
-    const getPostList = (page, rowsPerPage) => {
-        PostService.getPostList(page, rowsPerPage)
+    useEffect(() => {
+        if (categoryList.length === 0) {
+            return;
+        }
+        getPostList(page, rowsPerPage, category);
+    }, [page, rowsPerPage, category, categoryList]);
+
+
+    const getPostList = (page, rowsPerPage, category, content) => {
+        console.log(categoryList);
+        const categoryValue = categoryList.filter((element) => element.id === category)[0].value;
+        PostService.getPostList(page, rowsPerPage, categoryValue, content)
             .then(response => {
                 setPosts(response.data.content);
                 setTotalElements(response.data.totalElements);
@@ -58,6 +83,12 @@ export default function PostListContent(props) {
                 setServerErrorOn(true);
             });
     }
+
+    const handleCategoryChange = (event) => {
+        setCategory(event.target.value);
+        setPage(0);
+        setTotalElements(0);
+    };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -106,11 +137,42 @@ export default function PostListContent(props) {
         setPostIdsForDelete([]);
     }
 
+    function changeContentToFind(content) {
+        console.log("content=" + content);
+        setContentToFind(content);
+        getPostList(0, rowsPerPage, category, content)
+    }
+
     return (
         <Container className={classes.paper}>
-            <Typography className={`${classes.caption} ${classes.italic}`} variant="h5" gutterBottom>
-                {POST_LIST_CAPTION}
-            </Typography>
+            <Grid container justify='space-between'>
+                <Grid item>
+                    <Typography className={`${classes.caption} ${classes.italic}`} variant='h5' gutterBottom>
+                        {POST_LIST_CAPTION}
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    <SearchField onPressEnter={changeContentToFind} classname={classes.marginTop15}/>
+                </Grid>
+                <Grid item>
+                    <FormControl variant="outlined" className={classes.marginTop15}>
+                        <InputLabel id="categoryInputLabel">Category</InputLabel>
+                        <Select
+                            labelId="categoryInputLabel"
+                            id="categoryList"
+                            value={category}
+                            onChange={handleCategoryChange}
+                            label="Category"
+                        >
+                            {categoryList.map(({id, value}) => (
+                                <MenuItem key={id} value={id}>
+                                    {value}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+            </Grid>
             <List className={classes.list}>
                 {posts.map(({id, title, description,createdDate, category, createdBy}) => (
                     <React.Fragment key={id}>
