@@ -11,7 +11,7 @@ export default function BottomAppBar() {
     return (
         <AppBar className={classes.appBar}>
             <Toolbar  className={classes.toolbar}>
-                <Typography color="textSecondary" className={`${classes.title} ${classes.grow}`}>
+                <Typography className={`${classes.title} ${classes.grow} ${classes.whiteColor}`}>
                     {APP_BOTTOM_TEXT}
                 </Typography>
             </Toolbar>

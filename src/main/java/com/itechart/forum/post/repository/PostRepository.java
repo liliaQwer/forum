@@ -13,8 +13,8 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends JpaRepository<Post, Integer>, QuerydslPredicateExecutor<Post> {
 
     Page<Post> findByCategory(CategoryType category, Pageable pageable);
-    Page<Post> findByCategoryAndContentBodyContaining(CategoryType category, String content, Pageable pageable);
-    Page<Post> findByContentBodyContaining(String content, Pageable pageable);
+    Page<Post> findByCategoryAndDescriptionContainingIgnoreCaseOrTitleContainingIgnoreCase(CategoryType category, String description, String title, Pageable pageable);
+    Page<Post> findByDescriptionContainingIgnoreCaseOrTitleContainingIgnoreCase(String description, String title, Pageable pageable);
 
     @EntityGraph(value = "post-with-content")
     Page<Post> findAll(Pageable pageable);

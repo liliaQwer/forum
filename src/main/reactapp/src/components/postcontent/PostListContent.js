@@ -66,7 +66,7 @@ export default function PostListContent(props) {
         if (categoryList.length === 0) {
             return;
         }
-        getPostList(page, rowsPerPage, category);
+        getPostList(page, rowsPerPage, category, contentToFind);
     }, [page, rowsPerPage, category, categoryList]);
 
 
@@ -177,17 +177,17 @@ export default function PostListContent(props) {
                 {posts.map(({id, title, description,createdDate, category, createdBy}) => (
                     <React.Fragment key={id}>
                         <ListItem button onClick={(e) => handlePostClick(e, id)}>
-                            <ListItemAvatar>
+                            <ListItemAvatar className={`${classes.flex}`}>
                                 <Avatar aria-label="recipe" className={classes.avatar}>
                                     R
                                 </Avatar>
                             </ListItemAvatar>
                             <ListItemText primary={title} secondary={description}
-                                          className={classes.grow}/>
+                                          className={`${classes.grow} ${classes.width2}`}/>
                             <ListItemText secondary={category}
-                                          className={`${classes.lessGrow} ${classes.alignRight} ${classes.flex} ${classes.italic}`}/>
+                                          className={`${classes.width2} ${classes.alignRight} ${classes.flex} ${classes.italic}`}/>
                             <ListItemText secondary={new Date(createdDate).toDateString()}
-                                          className={`${classes.lessGrow} ${classes.alignRight} ${classes.flex} ${classes.blueColor}`}/>
+                                          className={`${classes.width2} ${classes.alignRight} ${classes.flex} ${classes.blueColor}`}/>
                             {createdBy === UserService.getUserLogin() && UserService.isValidAuthentification() && <ListItemSecondaryAction>
                                 <IconButton edge="end" aria-label="delete" onClick={(e) => handleDeletePost(e, id)}>
                                     <DeleteIcon/>

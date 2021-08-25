@@ -11,6 +11,9 @@ const useStyles = makeStyles(theme => ({
         alignRight: {
             justifyContent: 'flex-end'
         },
+        alignCenter: {
+            justifyContent: 'center'
+        },
         caption: {
             padding: theme.spacing(2, 2, 0),
             color: 'lightslategrey'
@@ -33,11 +36,17 @@ const useStyles = makeStyles(theme => ({
         flex: {
             display: 'flex'
         },
+        directionColumn: {
+            flexDirection: 'column'
+        },
         italic: {
             fontStyle: 'italic'
         },
         blueColor: {
             color: 'cornflowerblue'
+        },
+        whiteColor: {
+            color: 'white'
         },
         container: {
             backgroundColor: 'white',
@@ -172,8 +181,26 @@ const useStyles = makeStyles(theme => ({
         minWidth45: {
             minWidth: '45px !important'
         },
+        minWidth85: {
+            minWidth: '85px !important'
+        },
+    minWidth20: {
+        minWidth: '20px !important'
+    },
         floatRight: {
             float: 'right !important'
+        },
+        width2: {
+            width: theme.spacing(2)
+        },
+        fontSize26: {
+            fontSize: '26px'
+        },
+        alignItemsBaseLine: {
+            alignItems: 'baseline'
+        },
+        flexNoWrap: {
+            flexWrap: 'nowrap'
         }
     })
 );

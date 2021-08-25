@@ -2,16 +2,16 @@ package com.itechart.forum.post.service;
 
 import com.itechart.forum.common.exception.OptimisticLockingException;
 import com.itechart.forum.common.exception.ResourceNotFoundException;
-import com.itechart.forum.post.dto.*;
+import com.itechart.forum.post.dto.PostAddDto;
+import com.itechart.forum.post.dto.PostFilterDto;
+import com.itechart.forum.post.dto.PostInfoDto;
+import com.itechart.forum.post.dto.PostUpdateDto;
 import com.itechart.forum.post.entity.Post;
 import com.itechart.forum.post.entity.PostContent;
-import com.itechart.forum.post.entity.QPost;
 import com.itechart.forum.post.repository.PostRepository;
 import com.itechart.forum.post.type.CategoryType;
-import com.querydsl.core.BooleanBuilder;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -23,9 +23,6 @@ import org.springframework.stereotype.Service;
 
 import javax.naming.NoPermissionException;
 import javax.persistence.EntityNotFoundException;
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -104,10 +101,10 @@ public class PostServiceImpl implements PostService {
             if (isEmptyContentToFind) {
                 postDto = postRepository.findByCategory(filter.getCategory(), pageable);
             } else {
-                postDto = postRepository.findByCategoryAndContentBodyContaining(filter.getCategory(), filter.getContent(), pageable);
+                postDto = postRepository.findByCategoryAndDescriptionContainingIgnoreCaseOrTitleContainingIgnoreCase(filter.getCategory(), filter.getContent(), filter.getContent(), pageable);
             }
         } else if (!isEmptyContentToFind) {
-            postDto = postRepository.findByContentBodyContaining(filter.getContent(), pageable);
+            postDto = postRepository.findByDescriptionContainingIgnoreCaseOrTitleContainingIgnoreCase(filter.getContent(), filter.getContent(), pageable);
         } else {
             postDto = postRepository.findAll( pageable);
         }
