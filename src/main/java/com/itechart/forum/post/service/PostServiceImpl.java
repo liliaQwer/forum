@@ -101,7 +101,7 @@ public class PostServiceImpl implements PostService {
             if (isEmptyContentToFind) {
                 postDto = postRepository.findByCategory(filter.getCategory(), pageable);
             } else {
-                postDto = postRepository.findByCategoryAndDescriptionContainingIgnoreCaseOrTitleContainingIgnoreCase(filter.getCategory(), filter.getContent(), filter.getContent(), pageable);
+                postDto = postRepository.findByCategoryAndDescriptionContainingIgnoreCaseOrCategoryAndTitleContainingIgnoreCase(filter.getCategory(), filter.getContent(), filter.getCategory(), filter.getContent(), pageable);
             }
         } else if (!isEmptyContentToFind) {
             postDto = postRepository.findByDescriptionContainingIgnoreCaseOrTitleContainingIgnoreCase(filter.getContent(), filter.getContent(), pageable);

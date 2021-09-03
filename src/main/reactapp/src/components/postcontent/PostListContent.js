@@ -31,24 +31,29 @@ import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import SearchField from "../appbar/SearchField";
 import {useStyles} from "../../utils/AppStyle";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchPosts} from "../../utils/postSlice";
 
 export default function PostListContent(props) {
     const classes = useStyles();
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [posts, setPosts] = useState([]);
-    const [totalElements, setTotalElements] = useState(0);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [postIdsForDelete, setPostIdsForDelete] = useState([]);
     const [serverErrorOn, setServerErrorOn] = useState(false);
-    const [serverError, setServerError] = useState();
+    // const [serverError, setServerError] = useState();
     const [infoMessageOn, setInfoMessageOn] = useState(false);
     const [infoMessage, setInfoMessage] = useState();
     const [category, setCategory] = useState(0);
     const [categoryList, setCategoryList] = useState([]);
     const [contentToFind, setContentToFind] = useState('');
     const history = useHistory();
+    const posts = useSelector(state => state.posts.items);
+    const totalElements = useSelector(state => state.posts.totalItems);
+    const dispatch = useDispatch();
+    const postStatus = useSelector(state => state.posts.status);
+    const serverError = useSelector(state => state.posts.error);
 
     useEffect(() => {
         PostService.getCategoryList()
@@ -59,35 +64,41 @@ export default function PostListContent(props) {
                 console.log(categoryArray.map((value, index) => ({id: index, value: value})));
                 setCategory(0);
             })
-            .catch()
+            .catch();
     }, []);
+
+    useEffect(() => {
+        if (postStatus === 'error') {
+            setServerErrorOn(true);
+            setTimeout(() => setServerErrorOn(false), 2000)
+        }
+    }, [postStatus]);
 
     useEffect(() => {
         if (categoryList.length === 0) {
             return;
         }
-        getPostList(page, rowsPerPage, category, contentToFind);
+        if (postStatus === 'idle') {
+            // const categoryValue = categoryList.filter((element) => element.id === category)[0].value;
+            dispatch(fetchPosts({page, rowsPerPage, category: getCategoryValueById(category), contentToFind}));
+        }
+    }, [categoryList, category])
+
+    useEffect(() => {
+        if (categoryList.length === 0) {
+            return;
+        }
+        if (postStatus === 'idle') {
+            return;
+        }
+        dispatch(fetchPosts({page, rowsPerPage, category: getCategoryValueById(category), contentToFind}));
     }, [page, rowsPerPage, category, categoryList]);
 
-
-    const getPostList = (page, rowsPerPage, category, content) => {
-        console.log(categoryList);
-        const categoryValue = categoryList.filter((element) => element.id === category)[0].value;
-        PostService.getPostList(page, rowsPerPage, categoryValue, content)
-            .then(response => {
-                setPosts(response.data.content);
-                setTotalElements(response.data.totalElements);
-            })
-            .catch(error => {
-                ErrorService.showAppropriateError(error, setServerError);
-                setServerErrorOn(true);
-            });
-    }
+    const getCategoryValueById = id => categoryList.filter((element) => element.id === id)[0].value;
 
     const handleCategoryChange = (event) => {
         setCategory(event.target.value);
         setPage(0);
-        setTotalElements(0);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -115,7 +126,7 @@ export default function PostListContent(props) {
                 if (page !== 0){
                     setPage(0);
                 } else {
-                    getPostList(0, rowsPerPage);
+                    dispatch(fetchPosts({page: 0, rowsPerPage, category: getCategoryValueById(category), contentToFind}));
                 }
                 setPostIdsForDelete([]);
                 setInfoMessage(POST_DELETE_SUCCESS);
@@ -123,7 +134,7 @@ export default function PostListContent(props) {
                 setTimeout(() => setInfoMessageOn(false), 3000);
             })
             .catch(error => {
-                ErrorService.showAppropriateError(error, setServerError);
+                // ErrorService.showAppropriateError(error, setServerError);
                 setServerErrorOn(true);
                 setTimeout(() => setServerErrorOn(false), 3000);
             })
@@ -140,7 +151,7 @@ export default function PostListContent(props) {
     function changeContentToFind(content) {
         console.log("content=" + content);
         setContentToFind(content);
-        getPostList(0, rowsPerPage, category, content)
+        dispatch(fetchPosts({page: 0, rowsPerPage, category: getCategoryValueById(category), contentToFind: content}));
     }
 
     return (

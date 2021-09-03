@@ -45,7 +45,7 @@ export default function () {
     const [serverError, setServerError] = useState("");
     const [serverErrorOn, setServerErrorOn] = useState(false);
     const [showLoading, setShowLoading] = useState(false);
-    const [showAddConfirm, setShowAddConfirm] = useState(false);
+    const [infoMessageOn, setInfoMessageOn] = useState(false);
     const {postId} = useParams();
 
     const history = useHistory();
@@ -96,7 +96,7 @@ export default function () {
                 .then(
                     response => {
                         setShowLoading(false);
-                        setShowAddConfirm(true);
+                        messageInfoHandler();
                         getPostAndFillFields();
                     }
                 )
@@ -112,7 +112,7 @@ export default function () {
             .then(
                 response => {
                     setShowLoading(false);
-                    setShowAddConfirm(true);
+                    messageInfoHandler();
                     // history.push(`/${POSTS}`);
                     clearAllFields();
                 }
@@ -145,10 +145,6 @@ export default function () {
         setServerErrorOn(false);
     };
 
-    const handleDialogClose = () => {
-        setShowAddConfirm(false);
-    }
-
     const clearAllFields = () => {
         setTitle("");
         setCategory(1);
@@ -158,6 +154,11 @@ export default function () {
 
     const handleGoToMainPage = () => {
         history.push(`/${POSTS}`);
+    }
+
+    const messageInfoHandler = () => {
+        setInfoMessageOn(true);
+        // setTimeout(() => setInfoMessageOn(false), 3000);
     }
 
     return (
@@ -249,9 +250,14 @@ export default function () {
             }}>
                 <CircularProgress color="inherit"/>
             </Backdrop>
-            <Dialog onClose={handleDialogClose} aria-labelledby="simple-dialog-title" open={showAddConfirm}>
-                <DialogTitle id="simple-dialog-title">{postId ? POST_EDIT_SUCCESS : POST_ADD_SUCCESS}</DialogTitle>
-            </Dialog>
+            {/*<Dialog onClose={handleDialogClose} aria-labelledby="simple-dialog-title" open={showAddConfirm}>*/}
+            {/*    <DialogTitle id="simple-dialog-title">{postId ? POST_EDIT_SUCCESS : POST_ADD_SUCCESS}</DialogTitle>*/}
+            {/*</Dialog>*/}
+            {infoMessageOn &&
+            <Alert severity="success" className={classes.marginTop15}>
+                {postId ? POST_EDIT_SUCCESS : POST_ADD_SUCCESS}
+            </Alert>
+            }
         </Container>
     );
 }

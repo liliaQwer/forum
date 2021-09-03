@@ -27,6 +27,7 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import InfoDialog from "../utility/InfoDialog";
+import ReactDOM from "react-dom";
 
 export default function (props) {
     const classes = useStyles();
@@ -243,5 +244,14 @@ export default function (props) {
                 handleCancel={handleDeleteCommentCancel}
                 handleConfirm={handleDeleteCommentConfirm}
             />
+            <CommentsCountPortalTest value={comments.length}/>
         </React.Fragment>);
+}
+
+function CommentsCountPortalTest(props) {
+    const topBarDiv = document.getElementById("topBarDiv");
+
+    return topBarDiv
+        ? ReactDOM.createPortal(<p>Comments count: {props.value}</p>, topBarDiv)
+        : null;
 }

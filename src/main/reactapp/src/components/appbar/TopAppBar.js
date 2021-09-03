@@ -17,6 +17,7 @@ export default function TopAppBar() {
         <div className={classes.grow}>
             <AppBar position="static">
                 <Toolbar>
+                    <div id={'topBarDiv'}></div>
                     <div className={`${classes.grow} ${classes.flex} ${classes.alignCenter} ${classes.fontSize26}`}> Forum </div>
                     <div className={classes.sectionDesktop}>
                         {UserService.isValidAuthentification() && <AddPostButton/>}
