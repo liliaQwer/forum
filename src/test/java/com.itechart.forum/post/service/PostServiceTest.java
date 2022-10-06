@@ -7,8 +7,8 @@ import com.itechart.forum.post.repository.PostRepository;
 import com.itechart.forum.post.type.CategoryType;
 import com.itechart.forum.security.userdetails.UserDetailsImpl;
 import com.itechart.forum.user.dto.UserFullInfoDto;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -34,10 +34,10 @@ public class PostServiceTest {
 
     private PostServiceImpl postService;
 
-    private final String TEST_USER = "TestUser";
-    private final String TEST_TITLE = "Test tittle";
+    private final static String TEST_USER = "TestUser";
+    private final static String TEST_TITLE = "Test tittle";
 
-    @Before
+    @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
         postService = new PostServiceImpl(postRepository, new ModelMapper());

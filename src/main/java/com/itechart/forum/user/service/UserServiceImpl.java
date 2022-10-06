@@ -63,11 +63,11 @@ public class UserServiceImpl implements UserService{
     }
 
     private void validateExist(UserAddDto userAddDto) throws AlreadyExistException {
-        if (userRepository.existsByEmailIgnoreCase(userAddDto.getEmail())){
-            throw new AlreadyExistException("User already exists with the same email " + userAddDto.getEmail());
+        if (userRepository.existsByEmailIgnoreCase(userAddDto.email())){
+            throw new AlreadyExistException("User already exists with the same email " + userAddDto.email());
         }
-        if (userRepository.existsByLogin(userAddDto.getLogin())){
-            throw new AlreadyExistException("User already exists with the same login " + userAddDto.getLogin());
+        if (userRepository.existsByLogin(userAddDto.login())){
+            throw new AlreadyExistException("User already exists with the same login " + userAddDto.login());
         }
     }
 }

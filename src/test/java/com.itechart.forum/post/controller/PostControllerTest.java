@@ -20,10 +20,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-
+import java.util.List;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,7 +38,7 @@ public class PostControllerTest {
     @MockBean
     private PostService service;
 
-    private ArrayList<PostInfoDto> postList;
+    private List<PostInfoDto> postList;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -49,7 +47,7 @@ public class PostControllerTest {
     void popultePostList(){
         PostInfoDto post1 = new PostInfoDto(1, "Post 1", CategoryType.FOOD, "Post about food", "Test content", LocalDate.of(2022, 9, 30), "Test", 1);
         PostInfoDto post2 = new PostInfoDto(2, "Post 2", CategoryType.SCIENCE, "Post about science", "Test content", LocalDate.of(2022, 9, 20), "Test", 1);
-        postList = new ArrayList(){{add(post1);add(post2);}};
+        postList = List.of(post1,post2);
     }
 
     @Test
@@ -92,11 +90,7 @@ public class PostControllerTest {
         int id = 1;
         when(service.save(Mockito.any(PostAddDto.class))).thenReturn(id);
 
-        PostAddDto postToAdd = new PostAddDto();
-        postToAdd.setContent("Test content");
-        postToAdd.setCategory(CategoryType.FOOD);
-        postToAdd.setDescription("Test description");
-        postToAdd.setTitle("Test title");
+        PostAddDto postToAdd = new PostAddDto("Test title", CategoryType.FOOD, "Test description", "Test content");
         mockMvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON_UTF8)
                                                 .content(objectMapper.writeValueAsString(postToAdd)))
             .andExpect(status().isOk())
@@ -106,9 +100,7 @@ public class PostControllerTest {
     @Test
     @DisplayName("Check validation when Add a post")
     public void whenAddInvalidPost_thenReturnBadRequest() throws Exception {
-        PostAddDto postToAdd = new PostAddDto();
-        postToAdd.setContent("Test content");
-        postToAdd.setCategory(CategoryType.FOOD);
+        PostAddDto postToAdd = new PostAddDto("Test title", CategoryType.FOOD, null, "Test content");
         mockMvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(postToAdd)))
                 .andExpect(status().isBadRequest())

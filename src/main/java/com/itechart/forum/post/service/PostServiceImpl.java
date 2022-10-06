@@ -61,13 +61,13 @@ public class PostServiceImpl implements PostService {
     @Override
     public int save(PostAddDto postAddDto) {
         Post post = new Post();
-        post.setCategory(postAddDto.getCategory());
+        post.setCategory(postAddDto.category());
         PostContent content = new PostContent();
-        content.setBody(postAddDto.getContent());
+        content.setBody(postAddDto.content());
         content.setPost(post);
         post.setContent(content);
-        post.setDescription(postAddDto.getDescription());
-        post.setTitle(postAddDto.getTitle());
+        post.setDescription(postAddDto.description());
+        post.setTitle(postAddDto.title());
 
         //Post post = modelMapper.map(postAddDto, Post.class);
         postRepository.save(post);
@@ -96,15 +96,15 @@ public class PostServiceImpl implements PostService {
             pageable = PageRequest.of(pageable.getPageNumber(), defaultPageSize, Sort.Direction.DESC, "createdDate");
         }
         Page<Post> postDto;
-        boolean isEmptyContentToFind = filter.getContent() == null || filter.getContent().isEmpty();
-        if (filter.getCategory() != null && filter.getCategory() != CategoryType.All) {
+        boolean isEmptyContentToFind = filter.content() == null || filter.content().isEmpty();
+        if (filter.category() != null && filter.category() != CategoryType.All) {
             if (isEmptyContentToFind) {
-                postDto = postRepository.findByCategory(filter.getCategory(), pageable);
+                postDto = postRepository.findByCategory(filter.category(), pageable);
             } else {
-                postDto = postRepository.findByCategoryAndDescriptionContainingIgnoreCaseOrCategoryAndTitleContainingIgnoreCase(filter.getCategory(), filter.getContent(), filter.getCategory(), filter.getContent(), pageable);
+                postDto = postRepository.findByCategoryAndDescriptionContainingIgnoreCaseOrCategoryAndTitleContainingIgnoreCase(filter.category(), filter.content(), filter.category(), filter.content(), pageable);
             }
         } else if (!isEmptyContentToFind) {
-            postDto = postRepository.findByDescriptionContainingIgnoreCaseOrTitleContainingIgnoreCase(filter.getContent(), filter.getContent(), pageable);
+            postDto = postRepository.findByDescriptionContainingIgnoreCaseOrTitleContainingIgnoreCase(filter.content(), filter.content(), pageable);
         } else {
             postDto = postRepository.findAll( pageable);
         }

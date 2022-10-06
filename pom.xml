@@ -12,14 +12,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.6.RELEASE</version>
+        <version>2.7.4</version>
     </parent>
 
     <properties>
-        <java.version>1.8</java.version>
-        <projectlombok>1.18.10</projectlombok>
+        <java.version>17</java.version>
+        <projectlombok>1.18.22</projectlombok>
         <jsonwebtoken>0.9.1</jsonwebtoken>
-        <modelmapper>2.3.5</modelmapper>
+        <modelmapper>3.1.0</modelmapper>
         <querydsl>4.1.4</querydsl>
     </properties>
 
@@ -27,6 +27,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -114,12 +118,35 @@
             <version>3.2.4</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.3.170</version>
             <scope>test</scope>
+
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>javax.validation</groupId>-->
+<!--            <artifactId>validation-api</artifactId>-->
+<!--            <version>2.0.1.Final</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.hibernate.validator</groupId>-->
+<!--            <artifactId>hibernate-validator</artifactId>-->
+<!--            <version>7.0.5.Final</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>jakarta.validation</groupId>-->
+<!--            <artifactId>jakarta.validation-api</artifactId>-->
+<!--            <version>3.0.2</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>jakarta.el</groupId>-->
+<!--            <artifactId>jakarta.el-api</artifactId>-->
+<!--            <version>5.0.0</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
