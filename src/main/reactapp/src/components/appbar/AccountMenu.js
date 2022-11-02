@@ -2,16 +2,16 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import React from "react";
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import IconButton from "@material-ui/core/IconButton";
 import {AccountCircle} from "@material-ui/icons";
 import UserService from "../../services/UserService";
 import {SIGNIN} from "../../utils/Url";
 import {PROFILE, SIGN_IN, SIGN_OUT} from "../../utils/AppConstants";
 
-export default function AccountMenu(props) {
+export default function AccountMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const history = useHistory();
+    const navigate = useNavigate();
     let isMenuOpen = Boolean(anchorEl);
 
     const handleMenuOpen = event => {
@@ -20,11 +20,11 @@ export default function AccountMenu(props) {
 
     const handleSignOutMenuOpen = event => {
         UserService.signOut();
-        history.push(`/${SIGNIN}`);
+        navigate(`/${SIGNIN}`);
     };
 
     const handleSignInMenuOpen = event => {
-        history.push(`/${SIGNIN}`);
+        navigate(`/${SIGNIN}`);
     };
     const handleMenuClose = event => {
         setAnchorEl(null);

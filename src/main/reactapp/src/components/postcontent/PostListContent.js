@@ -8,7 +8,7 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import TablePagination from "@material-ui/core/TablePagination";
 import PostService from "../../services/PostService";
 import {Container} from "@material-ui/core";
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {POSTS_API_URL} from "../../utils/Url";
 import {
     CANCEL,
@@ -48,7 +48,7 @@ export default function PostListContent(props) {
     const [category, setCategory] = useState(0);
     const [categoryList, setCategoryList] = useState([]);
     const [contentToFind, setContentToFind] = useState('');
-    const history = useHistory();
+    const navigate = useNavigate();
     const posts = useSelector(state => state.posts.items);
     const totalElements = useSelector(state => state.posts.totalItems);
     const dispatch = useDispatch();
@@ -112,7 +112,7 @@ export default function PostListContent(props) {
 
     const handlePostClick = (e, postId) => {
         console.log(postId);
-        history.push(`${POSTS_API_URL}/${postId}`)
+        navigate(`${POSTS_API_URL}/${postId}`)
     };
 
     const handleDeletePost = (e, postId) => {

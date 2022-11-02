@@ -6,6 +6,7 @@ import com.itechart.forum.user.dto.LoginDto;
 import com.itechart.forum.user.dto.UserAddDto;
 import com.itechart.forum.user.dto.UserFullInfoDto;
 import com.itechart.forum.user.service.UserService;
+import com.itechart.forum.user.type.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,13 +28,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+
 
     @PostMapping(path = "/signup")
     public ResponseEntity<?> signUp(@Valid @RequestBody UserAddDto userAddDto) throws AlreadyExistException {
-        userService.saveAndFetch(new UserAddDto(userAddDto.login(), userAddDto.email(), passwordEncoder.encode(userAddDto.password())));
-        String token = jwtTokenUtil.generateToken(userAddDto.login(), userAddDto.role().name());
+        userService.saveAndFetch(new UserAddDto(userAddDto.login(), userAddDto.email(), userAddDto.password()));
+        String token = jwtTokenUtil.generateToken(userAddDto.login(), RoleType.USER.name());
         return ResponseEntity.ok(token);
     }
 

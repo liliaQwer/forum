@@ -6,7 +6,7 @@ import Button from "@material-ui/core/Button";
 import { Alert } from "@material-ui/lab";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UserService from "../../services/UserService";
 import { MAX_LENGTH, EMAIL_NOT_VALID, REQUIRED_FIELD, PASSWORD_MISMATCH} from "../../utils/ErrorMessages";
 import {MAX_EMAIL_LENGTH, MAX_LOGIN_LENGTH, MAX_PASSWORD_LENGTH} from "../../utils/ValidationRules";
@@ -25,7 +25,7 @@ export default function () {
     const [serverError, setServerError] = useState("");
     const [serverErrorOn, setServerErrorOn] = useState(false);
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -35,7 +35,7 @@ export default function () {
                 response => {
                     const token = response.data;
                     UserService.setAuthenticatedToken(token);
-                    history.push(`/${POSTS}`);
+                    navigate(`/${POSTS}`);
                 }
             )
             .catch(

@@ -7,6 +7,8 @@ import com.itechart.forum.user.entity.User;
 import com.itechart.forum.user.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,11 +19,19 @@ public class UserServiceImpl implements UserService{
     @Autowired
     ModelMapper modelMapper;
 
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Override
     public int save(UserAddDto userAddDto) throws AlreadyExistException {
         validateExist(userAddDto);
-        User user = userRepository.save(modelMapper.map(userAddDto, User.class));
-        return user.getId();
+        User user = new User();
+        user.setLogin(userAddDto.login());
+        user.setEmail(userAddDto.email());
+        user.setPassword(passwordEncoder.encode(userAddDto.password()));
+        user.setRole(userAddDto.role());
+        user.setProvider(userAddDto.provider());
+        User savedUser = userRepository.save(user);
+        return savedUser.getId();
     }
 
     @Override
@@ -35,8 +45,14 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserFullInfoDto saveAndFetch(UserAddDto userAddDto) throws AlreadyExistException {
         validateExist(userAddDto);
-        User user = userRepository.save(modelMapper.map(userAddDto, User.class));
-        return modelMapper.map(user, UserFullInfoDto.class);
+        User user = new User();
+        user.setLogin(userAddDto.login());
+        user.setEmail(userAddDto.email());
+        user.setPassword(passwordEncoder.encode(userAddDto.password()));
+        user.setRole(userAddDto.role());
+        user.setProvider(userAddDto.provider());
+        User savedUser = userRepository.save(user);
+        return modelMapper.map(savedUser, UserFullInfoDto.class);
     }
 
     @Override

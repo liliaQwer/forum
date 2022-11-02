@@ -6,7 +6,7 @@ import Button from "@material-ui/core/Button";
 import { Alert } from "@material-ui/lab";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
 import UserService from "../../services/UserService";
 import { MAX_LENGTH, REQUIRED_FIELD, PASSWORD_MISMATCH} from "../../utils/ErrorMessages";
@@ -25,7 +25,7 @@ export default function () {
     const [serverErrorOn, setServerErrorOn] = useState(false);
 
     const location  = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const token = location.search.split("=")[1];
     console.log(token);
@@ -36,7 +36,7 @@ export default function () {
             .then(
                 response => {
                     UserService.setAuthenticatedToken(token);
-                    history.push(`/${POSTS}`);
+                    navigate(`/${POSTS}`);
                 }
             )
             .catch(

@@ -6,15 +6,26 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-    #hibernate:
+      #hibernate:
       #ddl-auto: update
     open-in-view: false
 
   datasource:
     url: jdbc:postgresql://localhost:5432/forum
     username: postgres
-    password: postgres
+    password: superuser
 
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            clientId: 5672560539472483
+            clientSecret:
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - public_profile
   mail:
     default-encoding: UTF-8
     host: smtp.gmail.com
@@ -43,3 +54,9 @@ pagination:
     min: 5
     max: 20
     default: 10
+
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE

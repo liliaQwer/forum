@@ -1,5 +1,6 @@
 package com.itechart.forum.user.entity;
 
+import com.itechart.forum.user.type.AuthProvider;
 import com.itechart.forum.user.type.RoleType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,6 @@ import java.time.LocalDate;
 @Entity
 @Data
 @Table(name = "\"user\"")
-@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
 public class User {
 
@@ -29,6 +29,9 @@ public class User {
 
     @Enumerated(EnumType.ORDINAL)
     private RoleType role;
+
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
 
     @Column(nullable = false, updatable = false)
     @CreatedDate

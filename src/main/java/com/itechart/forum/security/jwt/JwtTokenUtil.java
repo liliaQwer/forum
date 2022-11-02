@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Date;
 import java.util.function.Function;
 
@@ -51,13 +52,17 @@ public class JwtTokenUtil implements Serializable {
     //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
     //   compaction of the JWT to a URL-safe string
     public String generateToken(String userName, String role) {
+        return generateToken(userName, role, new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000));
+    }
+
+    public String generateToken(String userName, String role, Date expireAt) {
         Claims claims = Jwts.claims();
         claims.put("role", role);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                .setExpiration(expireAt)
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }

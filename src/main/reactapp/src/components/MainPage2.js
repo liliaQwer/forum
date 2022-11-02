@@ -5,7 +5,7 @@ import React from "react";
 import TopAppBar from "./appbar/TopAppBar";
 import BottomAppBar from "./appbar/BottomAppBar";
 import PostListContent from "./postcontent/PostListContent";
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import {POST_API_URL, POSTS_API_URL} from "../utils/Url";
 import PostWithComments from "./postcontent/PostWithComments";
 import NotFound from "./NotFound";
@@ -43,14 +43,14 @@ function MainPage2() {
     return (
         <div>
             <TopAppBar/>
-            <Switch>
-                <Route path={`${POST_API_URL}`} exact component={AddPost} />
-                <Route path={`${POST_API_URL}/:postId`} component={AddPost}/>
-                <Route path={`${POSTS_API_URL}`} exact component={PostListContent}/>
-                <Route path={`/`} exact component={PostListContent}/>
-                <Route path={`${POSTS_API_URL}/:postId`} component={PostWithComments}/>
-                <Route component={NotFound} />
-            </Switch>
+            <Routes>
+                <Route path={`${POST_API_URL}`}  element={<AddPost/>} />
+                <Route path={`${POST_API_URL}/:postId`} element={<AddPost/>}/>
+                <Route path={`${POSTS_API_URL}`} element={<PostListContent/>}/>
+                <Route path={`/`}  element={<PostListContent/>}/>
+                <Route path={`${POSTS_API_URL}/:postId`} element={<PostWithComments/>}/>
+                <Route element={<NotFound/>} />
+            </Routes>
             <BottomAppBar/>
         </div>
     );

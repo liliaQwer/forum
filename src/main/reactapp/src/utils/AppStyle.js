@@ -201,7 +201,18 @@ const useStyles = makeStyles(theme => ({
         },
         flexNoWrap: {
             flexWrap: 'nowrap'
-        }
+        },
+
+    facebookButton: {
+        fontStyle: 'italic',
+        color: '#2b2ba1',
+        paddingTop: '15px',
+        paddingBottom: '15px',
+        textDecoration: 'none'
+    },
+    facebookImg: {
+        width: '15px'
+    }
     })
 );
 

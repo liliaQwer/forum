@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 import {Alert} from "@material-ui/lab";
 import {TextValidator, ValidatorForm} from "react-material-ui-form-validator";
 import React, {useState, useEffect} from "react";
-import {useHistory, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {MAX_LENGTH, REQUIRED_FIELD} from "../../utils/ErrorMessages";
 import {
     MAX_DESCRIPTION_LENGTH,
@@ -48,7 +48,7 @@ export default function () {
     const [infoMessageOn, setInfoMessageOn] = useState(false);
     const {postId} = useParams();
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         PostService.getCategoryList()
@@ -153,7 +153,7 @@ export default function () {
     }
 
     const handleGoToMainPage = () => {
-        history.push(`/${POSTS}`);
+        navigate(`/${POSTS}`);
     }
 
     const messageInfoHandler = () => {

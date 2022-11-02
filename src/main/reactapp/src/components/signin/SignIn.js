@@ -6,26 +6,30 @@ import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
-import { Link as RouterLink,  useHistory } from "react-router-dom";
+import {Link as RouterLink, useNavigate, useParams} from "react-router-dom";
 import React, {useState} from "react";
 import UserService from "../../services/UserService";
 import {Alert} from "@material-ui/lab";
 import {MAX_LENGTH, REQUIRED_FIELD} from "../../utils/ErrorMessages";
 import {MAX_PASSWORD_LENGTH, MAX_LOGIN_LENGTH} from "../../utils/ValidationRules";
-import {POSTS, RESTORE_PASSWORD_URL, SIGNUP_API_URL} from "../../utils/Url";
+import {FACEBOOK_AUTH_URL, POSTS, POSTS_API_URL, RESTORE_PASSWORD_URL, SIGNUP_API_URL} from "../../utils/Url";
 import {ANONYMOUS_USER, FORGOT_PASSWORD, SIGN_IN, SIGN_UP_LINK} from "../../utils/AppConstants";
 import {useStyles} from "../../utils/AppStyle";
 import ErrorService from "../../services/ErrorService";
+import fbLogo from '../../images/fb-logo.png';
+import PostService from "../../services/PostService";
+import axios from "axios";
 
 export default function () {
     const classes = useStyles();
 
+    const {error} = useParams();
     const [password, setPassword] = useState("");
     const [login, setLogin] = useState("");
-    const [serverError, setServerError] = useState("");
-    const [serverErrorOn, setServerErrorOn] = useState(false);
+    const [serverError, setServerError] = useState(error);
+    const [serverErrorOn, setServerErrorOn] = useState(error ? true : false);
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -35,7 +39,7 @@ export default function () {
                 response => {
                     const token = response.data;
                     UserService.setAuthenticatedToken(token);
-                    history.push(`/${POSTS}`);
+                    navigate(`/${POSTS}`);
                 }
             )
             .catch(
@@ -58,7 +62,7 @@ export default function () {
     const handleAnonymousUser = (event) => {
         event.preventDefault();
         UserService.signOut();
-        history.push(`${POSTS}`);
+        navigate(`${POSTS}`);
     };
 
     return (
@@ -70,6 +74,11 @@ export default function () {
                 </Avatar>
                 <Typography variant="h5">
                     {SIGN_IN}
+                </Typography>
+                <a className={classes.facebookButton} href={FACEBOOK_AUTH_URL}>
+                    <img className={classes.facebookImg} src={fbLogo} alt="Facebook" /> with Facebook</a>
+                <Typography align={"center"} variant="h6">
+                    Or
                 </Typography>
                 <ValidatorForm
                     className={classes.form}
@@ -121,12 +130,12 @@ export default function () {
                     </Button>
                     <Grid container justify="space-between" spacing={2}>
                         <Grid item xs>
-                            <Link to={`${RESTORE_PASSWORD_URL}`}  variant="body2" component={RouterLink}>
+                            <Link to={`${RESTORE_PASSWORD_URL}`}  variant="body2" >
                                 {FORGOT_PASSWORD}
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link to={`${SIGNUP_API_URL}`}  variant="body2" component={RouterLink}>
+                            <Link to={`${SIGNUP_API_URL}`}  variant="body2" >
                                 {SIGN_UP_LINK}
                             </Link>
                         </Grid>

@@ -1,5 +1,6 @@
 package com.itechart.forum.user.dto;
 
+import com.itechart.forum.user.type.AuthProvider;
 import com.itechart.forum.user.type.RoleType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ public class UserFullInfoDto {
         this.password = user.password;
         this.email = user.email;
         this.role = user.role;
+        this.provider = user.provider;
     }
     private Integer id;
 
@@ -24,4 +26,6 @@ public class UserFullInfoDto {
     private String password;
 
     private RoleType role;
+
+    private AuthProvider provider;
 }

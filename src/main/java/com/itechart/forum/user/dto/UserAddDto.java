@@ -1,5 +1,6 @@
 package com.itechart.forum.user.dto;
 
+import com.itechart.forum.user.type.AuthProvider;
 import com.itechart.forum.user.type.RoleType;
 
 import javax.persistence.EnumType;
@@ -26,9 +27,12 @@ public record UserAddDto (
     String password,
 
     @Enumerated(EnumType.ORDINAL)
-    RoleType role) {
+    RoleType role,
+
+    @Enumerated(EnumType.STRING)
+    AuthProvider provider) {
 
     public UserAddDto(String login, String email, String password) {
-        this(login, email, password, RoleType.USER);
+        this(login, email, password, RoleType.USER, AuthProvider.local);
     }
 }
