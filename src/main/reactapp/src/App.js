@@ -18,6 +18,7 @@ function App() {
                <Route path={`${RESTORE_PASSWORD_URL}`}  element={<RestorePassword/>} />
                <Route path={`${RESTORE_API_URL}`} element={<UpdatePassword/>} />
                <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler/>} />
+               <Route path="/error"  element={<MainPage2/>} />
                <Route path="/*"  element={<MainPage2/>} />
            </Routes>
        </Router>

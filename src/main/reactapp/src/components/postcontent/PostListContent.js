@@ -156,7 +156,7 @@ export default function PostListContent(props) {
 
     return (
         <Container className={classes.paper}>
-            <Grid container justify='space-between'>
+            <Grid container justifyContent='space-between'>
                 <Grid item>
                     <Typography className={`${classes.caption} ${classes.italic}`} variant='h5' gutterBottom>
                         {POST_LIST_CAPTION}
@@ -225,8 +225,8 @@ export default function PostListContent(props) {
                 count={totalElements}
                 rowsPerPage={rowsPerPage}
                 page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
                 labelRowsPerPage={'Posts per page:'}
             />
             <InfoDialog

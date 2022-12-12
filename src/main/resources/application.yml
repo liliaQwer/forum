@@ -1,17 +1,20 @@
 spring:
   jpa:
+    generate-ddl: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
           lob:
             non_contextual_creation: true
-      #hibernate:
-      #ddl-auto: update
+        ddl-auto: update
     open-in-view: false
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/forum
+#    url: jdbc:postgresql://localhost:5432/forum
+#    url: jdbc:postgresql://host.docker.internal:6543/forum
+#    url: jdbc:postgresql://postgres-db:5432/forum
+    url: jdbc:postgresql://${POSTGRES_URL}:5432/forum
     username: postgres
     password: superuser
 

@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @Entity
 @Data
 @Table(name = "\"user\"")
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
 public class User {
 
@@ -36,4 +37,7 @@ public class User {
     @Column(nullable = false, updatable = false)
     @CreatedDate
     private LocalDate createdDate;
+
+    @Version
+    private int version;
 }

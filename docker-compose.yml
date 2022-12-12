@@ -1,0 +1,29 @@
+version: '1'
+
+services:
+  app:
+    image: 'forum:latest'
+    build:
+      context: ./
+      dockerfile: ./src/main/docker/Dockerfile
+    container_name: app
+    ports:
+      - '3000:8080'
+    depends_on:
+      - postgres-db
+    environment:
+      - POSTGRES_URL=postgres-db
+
+  postgres-db:
+    image: 'postgres:14.6'
+    container_name: postgres-db
+    environment:
+      - POSTGRES_PASSWORD=superuser
+      - POSTGRES_DB=forum
+    ports:
+      - "6543:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

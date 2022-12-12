@@ -6,8 +6,8 @@ import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
-import {Link as RouterLink, useNavigate, useParams} from "react-router-dom";
-import React, {useState} from "react";
+import {Link as RouterLink, useNavigate, useParams, useSearchParams} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import UserService from "../../services/UserService";
 import {Alert} from "@material-ui/lab";
 import {MAX_LENGTH, REQUIRED_FIELD} from "../../utils/ErrorMessages";
@@ -17,11 +17,12 @@ import {ANONYMOUS_USER, FORGOT_PASSWORD, SIGN_IN, SIGN_UP_LINK} from "../../util
 import {useStyles} from "../../utils/AppStyle";
 import ErrorService from "../../services/ErrorService";
 import fbLogo from '../../images/fb-logo.png';
-import PostService from "../../services/PostService";
-import axios from "axios";
 
 export default function () {
     const classes = useStyles();
+    const [searchParams] = useSearchParams();
+
+    const errorFromUrl = searchParams.get('error');
 
     const {error} = useParams();
     const [password, setPassword] = useState("");
@@ -30,6 +31,13 @@ export default function () {
     const [serverErrorOn, setServerErrorOn] = useState(error ? true : false);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (errorFromUrl) {
+            setServerError(errorFromUrl);
+            setServerErrorOn(true);
+        }
+    }, []);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -62,7 +70,15 @@ export default function () {
     const handleAnonymousUser = (event) => {
         event.preventDefault();
         UserService.signOut();
-        navigate(`${POSTS}`);
+        navigate(`/${POSTS}`);
+    };
+
+    const handleSignIn = () => {
+        navigate(`${SIGNUP_API_URL}`);
+    };
+
+    const handleRestorePassword = () => {
+        navigate(`${RESTORE_PASSWORD_URL}`);
     };
 
     return (
@@ -128,19 +144,19 @@ export default function () {
                     >
                         {SIGN_IN}
                     </Button>
-                    <Grid container justify="space-between" spacing={2}>
+                    <Grid container justifyContent="space-between" spacing={2}>
                         <Grid item xs>
-                            <Link to={`${RESTORE_PASSWORD_URL}`}  variant="body2" >
+                            <Link href="#" to={`${RESTORE_PASSWORD_URL}`}  onClick={handleRestorePassword}  variant="body2" >
                                 {FORGOT_PASSWORD}
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link to={`${SIGNUP_API_URL}`}  variant="body2" >
+                            <Link href="#" onClick={handleSignIn} variant="body2" >
                                 {SIGN_UP_LINK}
                             </Link>
                         </Grid>
                         <Grid item xs={12} className={classes.textCenter}>
-                            <Link href="#" className={classes.greenColor}  onClick={handleAnonymousUser}>
+                            <Link href="#" onClick={handleAnonymousUser}>
                                 {ANONYMOUS_USER}
                             </Link>
                         </Grid>

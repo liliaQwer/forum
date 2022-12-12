@@ -1,14 +1,12 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import SearchField from "./SearchField";
 import NotificationBadge from "./NotificationBadge";
 import AccountMenu from "./AccountMenu";
 import BadgeAccountMenuMobile from "./BadgeAccountMenuMobile";
 import {useStyles} from "../../utils/AppStyle";
 import AddPostButton from "./AddPostButton";
 import UserService from "../../services/UserService";
-import Typography from "@material-ui/core/Typography";
 
 export default function TopAppBar() {
     const classes = useStyles();

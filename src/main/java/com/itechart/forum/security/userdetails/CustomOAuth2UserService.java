@@ -10,7 +10,9 @@ import com.itechart.forum.user.type.AuthProvider;
 import com.itechart.forum.user.type.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -57,6 +59,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private UserFullInfoDto registerNewUser(OAuth2UserRequest oAuth2UserRequest, CustomOAuth2User oAuth2UserInfo) throws AlreadyExistException {
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                oAuth2UserInfo, null, oAuth2UserInfo.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         UserAddDto user = new UserAddDto(oAuth2UserInfo.getName(),oAuth2UserInfo.getEmail(),"*", RoleType.USER, AuthProvider.facebook);
         userService.save(user);
         return userService.findByEmail(oAuth2UserInfo.getEmail());

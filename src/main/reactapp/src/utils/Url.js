@@ -12,7 +12,7 @@ const SIGNIN = "signin";
 const SIGNUP = "signup";
 const CATEGORY_LIST = "/post_categories";
 const API_BASE_URL = 'http://localhost:8080';
-const OAUTH2_REDIRECT_URI = 'http://localhost:3000/oauth2/redirect';
+// const OAUTH2_REDIRECT_URI = 'http://localhost:3000/oauth2/redirect';
 const FACEBOOK_AUTH_URL = API_BASE_URL + '/oauth2/authorize/facebook';//?redirect_uri=' + OAUTH2_REDIRECT_URI;
 
 
