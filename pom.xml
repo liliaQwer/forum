@@ -21,6 +21,7 @@
         <jsonwebtoken>0.9.1</jsonwebtoken>
         <modelmapper>3.1.0</modelmapper>
         <querydsl>4.1.4</querydsl>
+        <maven.exec.skip>true</maven.exec.skip>
     </properties>
 
     <dependencies>
@@ -168,6 +169,7 @@
                         </goals>
                         <phase>initialize</phase>
                         <configuration>
+                            <skip>${maven.exec.skip}</skip>
                             <executable>npm</executable>
                             <arguments>
                                 <argument>install</argument>
@@ -182,6 +184,7 @@
                         </goals>
                         <phase>compile</phase>
                         <configuration>
+                            <skip>${maven.exec.skip}</skip>
                             <executable>npm</executable>
                             <arguments>
                                 <argument>run</argument>

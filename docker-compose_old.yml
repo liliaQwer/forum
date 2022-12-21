@@ -5,10 +5,10 @@ services:
     image: 'forum:latest'
     build:
       context: ./
-      dockerfile: ./Dockerfile_front_back
+      dockerfile: ./src/main/docker/Dockerfile
     container_name: app
     ports:
-      - '8080:8080'
+      - '3000:8080'
     depends_on:
       - postgres-db
     environment:
