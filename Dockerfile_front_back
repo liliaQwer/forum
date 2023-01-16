@@ -1,17 +1,25 @@
 FROM node:16-alpine as front
-WORKDIR /app
-COPY src/main/reactapp/package.json /app
+WORKDIR /front
+COPY src/main/reactapp/package.json /front
 RUN npm install
-COPY src/main/reactapp/public  /app/public
-COPY src/main/reactapp/src  /app/src
+COPY src/main/reactapp/public  /front/public
+COPY src/main/reactapp/src  /front/src
 RUN npm run build
 
 FROM maven as backend
 WORKDIR /back
+COPY 'pom.xml'  /back
+#resolve dependencies
+RUN mvn clean package -Dmaven.main.skip -Dspring-boot.repackage.skip && rm -r target/
 COPY 'src/main/java'  /back/src/main/java
 COPY 'src/main/resources'  /back/src/main/resources
-COPY 'pom.xml'  /back
-RUN mvn clean install
-COPY --from=0 /app/build /back/BOOT-INF/classes/public
+#build the app
+RUN mvn clean package
+
+#optimizing the image
+FROM openjdk:17-ea-jdk
+WORKDIR /app
+COPY --from=front /front/build /app/BOOT-INF/classes/public
+COPY --from=backend /back/target /app/target
 RUN jar uf target/forum-1.0-SNAPSHOT.jar BOOT-INF/classes/public
-ENTRYPOINT ["java", "-jar", "target/forum-1.0-SNAPSHOT.jar","-Dspring.profiles.active=docker"]
+ENTRYPOINT ["java", "-jar", "target/forum-1.0-SNAPSHOT.jar"]
