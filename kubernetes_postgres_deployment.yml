@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresql
+  labels:
+    app: postgresql
+    tier: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgresql
+        tier: database
+    spec:
+      containers:
+        - name: postgresql
+          image: 'postgres:14.6'
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: POSTGRES_DB
+              value: forum
+            - name: POSTGRES_PASSWORD
+              value: superuser
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgresql-claim
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgresql-claim
+          persistentVolumeClaim:
+            claimName: postgresql-claim
